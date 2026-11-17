@@ -4,447 +4,656 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>나의 공부 플래너</title>
+<title>오늘의 공부 플래너</title>
 <style>
 :root {
-  --bg:#f5f6fb;
-  --card:#fff;
-  --text:#25283a;
-  --muted:#85899b;
-  --primary:#7275df;
-  --soft:#eeeeff;
-  --line:#eceef4;
+  --bg:#f5f6fb; --card:#fff; --text:#25283a; --muted:#85899b;
+  --line:#eceef4; --primary:#7477df; --soft:#eeeeff;
+  --input:#fafaff; --green:#42ad91;
+}
+body.dark {
+  --bg:#171925; --card:#222638; --text:#f0f1fa; --muted:#a3a7ba;
+  --line:#373b50; --primary:#a2a1ff; --soft:#353451;
+  --input:#2b3044; --green:#65c7a9;
 }
 * {box-sizing:border-box}
 body {
-  margin:0;
-  padding:20px 12px 40px;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Arial,"Noto Sans KR",sans-serif;
-}
-.app {max-width:720px;margin:auto}
-header {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:25px;
-}
-h1 {font-size:21px;margin:0}
-.subtitle {font-size:12px;color:var(--muted);margin-top:5px}
-.today {
-  background:var(--soft);
-  color:var(--primary);
-  padding:9px 12px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:bold;
-}
-.welcome {
-  background:linear-gradient(120deg,#7275df,#9698f4);
-  color:white;
-  padding:25px;
-  border-radius:20px;
-  margin-bottom:17px;
-}
-.welcome h2 {margin:0 0 8px;font-size:23px}
-.welcome p {margin:0;font-size:13px;opacity:.9}
-.card {
-  background:var(--card);
-  padding:20px;
-  border-radius:18px;
-  margin-bottom:15px;
-  box-shadow:0 7px 25px #2020400a;
-}
-.card h3 {font-size:16px;margin:0 0 16px}
-.date-row,.add-row,.dday-row {
-  display:flex;
-  gap:8px;
-}
-input {
-  min-width:0;
-  padding:12px;
-  border:1px solid var(--line);
-  border-radius:10px;
-  background:#fafaff;
-  font-size:13px;
-}
-#date {flex:1}
-button {
-  cursor:pointer;
-  border:0;
-  border-radius:10px;
-  padding:11px 14px;
-  font-weight:bold;
-}
-.primary {
-  background:var(--primary);
-  color:white;
-}
-.secondary {
-  background:var(--soft);
-  color:var(--primary);
-}
-#taskInput {flex:1;width:100%}
-.task {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:13px 3px;
-  border-bottom:1px solid var(--line);
-}
-.task span {flex:1;font-size:14px;overflow-wrap:anywhere}
-.task.done span {
-  text-decoration:line-through;
-  color:#aaa;
-}
-.task input {accent-color:var(--primary)}
-.task button {
-  padding:6px;
-  background:transparent;
-  color:#888;
-  font-size:12px;
-}
-.empty {
-  text-align:center;
-  padding:20px;
-  color:#999;
-  font-size:13px;
-}
-.progress-info {
-  display:flex;
-  justify-content:space-between;
-  font-size:12px;
-  color:var(--muted);
-  margin:15px 0 8px;
-}
-.progress {
-  height:7px;
-  background:#eeeef5;
-  border-radius:20px;
-  overflow:hidden;
-}
-#progressBar {
-  height:100%;
-  width:0;
-  background:#49b99b;
+  margin:0; padding:22px 12px 40px; background:var(--bg);
+  color:var(--text); font-family:Arial,"Noto Sans KR",sans-serif;
   transition:.2s;
 }
-.dday {
-  background:linear-gradient(120deg,#7275df,#9698f4);
-  color:white;
+button,input,textarea,select {font:inherit}
+button {cursor:pointer}
+.app {max-width:850px;margin:auto}
+header {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin-bottom:23px
 }
-.dday h3 {color:white}
-.dday input {
-  flex:1;
-  width:100%;
-  background:#ffffff20;
-  color:white;
-  border-color:#ffffff55;
+.brand {display:flex;align-items:center;gap:11px}
+.logo {
+  width:43px;height:43px;border-radius:15px;display:grid;
+  place-items:center;background:linear-gradient(135deg,#8588ed,#666bd0);
+  color:white;font-size:22px
 }
-.dday input::placeholder {color:#eee}
-.dday button {
-  background:white;
-  color:#7275df;
+h1 {font-size:20px;margin:0}
+.sub {font-size:12px;color:var(--muted);margin-top:4px}
+.header-actions {display:flex;gap:8px}
+.header-btn {
+  width:40px;height:40px;border:1px solid var(--line);
+  background:var(--card);color:var(--text);border-radius:12px;font-size:18px
 }
-#ddayResult {
-  margin-top:17px;
-  font-size:14px;
-  line-height:1.7;
+.welcome {
+  padding:25px 26px;border-radius:21px;
+  background:linear-gradient(120deg,#7477df,#999af1);
+  color:white;margin-bottom:17px
 }
-#ddayNumber {
-  font-size:32px;
-  font-weight:bold;
+.welcome .eyebrow {font-size:11px;opacity:.85}
+.welcome h2 {font-size:24px;margin:8px 0 6px}
+.welcome p {font-size:13px;margin:0;opacity:.9}
+.grid {
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:15px;align-items:start
 }
-footer {
-  text-align:center;
-  color:#aaa;
-  font-size:11px;
-  padding:15px;
+.card {
+  background:var(--card);border:1px solid var(--line);
+  border-radius:18px;padding:19px;min-width:0
 }
-@media(max-width:480px) {
+.full {grid-column:1/-1}
+.head {
+  display:flex;justify-content:space-between;
+  align-items:center;gap:10px;margin-bottom:15px
+}
+h3 {font-size:15px;margin:0}
+.note {font-size:11px;color:var(--muted)}
+.date-row {display:flex;gap:7px}
+.date-row input {flex:1;min-width:0}
+input,textarea,select {
+  background:var(--input);color:var(--text);
+  border:1px solid var(--line);border-radius:10px;
+  padding:10px 11px;outline:none
+}
+input:focus,textarea:focus,select:focus {border-color:var(--primary)}
+.btn {
+  border:0;background:var(--primary);color:white;
+  border-radius:10px;padding:10px 14px;font-weight:700
+}
+.soft-btn {
+  border:1px solid var(--line);background:var(--input);
+  color:var(--text);border-radius:10px;padding:9px 11px
+}
+.date-caption {font-size:12px;color:var(--muted);margin-top:11px}
+.add-row {display:flex;gap:8px;margin-bottom:12px}
+.add-row input {flex:1;min-width:0}
+.task-list {display:grid;gap:7px}
+.task {
+  display:flex;align-items:center;gap:9px;
+  background:var(--input);border-radius:11px;padding:10px
+}
+.task input {accent-color:var(--primary);width:17px;height:17px}
+.task-text {flex:1;min-width:0;font-size:13px;overflow-wrap:anywhere}
+.task.done .task-text {text-decoration:line-through;color:var(--muted)}
+.task-actions {display:flex;gap:3px}
+.task-actions button {
+  border:0;background:transparent;color:var(--muted);
+  font-size:11px;padding:5px
+}
+.empty {text-align:center;color:var(--muted);font-size:12px;padding:17px 5px}
+.progress-info {
+  display:flex;justify-content:space-between;
+  color:var(--muted);font-size:11px;margin:14px 0 7px
+}
+.progress {height:7px;border-radius:20px;background:var(--line);overflow:hidden}
+.progress>div {
+  height:100%;background:var(--green);border-radius:20px;transition:.2s
+}
+textarea {width:100%;min-height:110px;resize:vertical;line-height:1.6;font-size:13px}
+.dday-card {
+  background:linear-gradient(120deg,#7477df,#9698ef);
+  color:white;border:0
+}
+.dday-card .note {color:#e6e6ff}
+.dday-form {display:flex;gap:7px}
+.dday-form input {
+  min-width:0;flex:1;background:#ffffff20;
+  color:white;border-color:#ffffff60
+}
+.dday-form input::placeholder {color:#eee}
+.dday-form input[type=date] {color-scheme:dark}
+.dday-form button {background:white;color:#666bd0}
+.dday-result {display:flex;align-items:center;gap:12px;margin-top:14px}
+.dday-number {font-size:30px;font-weight:900}
+.dday-detail {font-size:12px;line-height:1.5;color:#f0f0ff}
+.dday-delete {
+  margin-left:auto;background:transparent;color:white;
+  border:1px solid #ffffff70;border-radius:8px;padding:7px;font-size:11px
+}
+.timer-subject {display:flex;gap:8px;align-items:center}
+.timer-subject select {flex:1;min-width:0}
+.timer-display {
+  text-align:center;font-size:39px;font-weight:800;
+  letter-spacing:2px;margin:20px 0 15px;font-variant-numeric:tabular-nums
+}
+.timer-actions {display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.timer-actions button {min-width:85px}
+.study-records {display:flex;flex-wrap:wrap;gap:7px;margin-top:15px}
+.chip {
+  background:var(--soft);color:var(--primary);
+  padding:7px 9px;border-radius:9px;font-size:11px
+}
+.mood-list {display:flex;gap:8px;flex-wrap:wrap}
+.mood {
+  font-size:22px;background:var(--input);
+  border:1px solid var(--line);border-radius:12px;padding:8px 11px
+}
+.mood.active {
+  background:var(--soft);border:2px solid var(--primary);padding:7px 10px
+}
+.mood-message {font-size:12px;color:var(--muted);margin-top:11px}
+footer {text-align:center;color:var(--muted);font-size:11px;padding:18px 0 0}
+@media(max-width:650px) {
   body {padding:15px 10px 30px}
+  .grid {grid-template-columns:1fr;gap:12px}
+  .full {grid-column:auto}
   .card {padding:16px}
   .welcome {padding:21px}
-  .welcome h2 {font-size:20px}
-  .dday-row {flex-wrap:wrap}
-  .dday-row input:first-child {flex-basis:100%}
+  .welcome h2 {font-size:21px}
+  .dday-form {flex-wrap:wrap}
+  .dday-form input:first-child {flex-basis:100%}
+  .timer-display {font-size:34px}
 }
 </style>
 </head>
 <body>
-<div class="app">
+<main class="app">
 
 <header>
-  <div>
-    <h1>✦ STUDY PLANNER</h1>
-    <div class="subtitle">나만의 공부 기록</div>
+  <div class="brand">
+    <div class="logo">✦</div>
+    <div>
+      <h1>오늘의 공부 플래너</h1>
+      <div class="sub">나만의 공부 루틴을 만들어봐요</div>
+    </div>
   </div>
-  <div class="today" id="today"></div>
+  <div class="header-actions">
+    <button class="header-btn" id="todayBtn" title="오늘로 이동">⌂</button>
+    <button class="header-btn" id="themeBtn" title="다크 모드 전환">☾</button>
+  </div>
 </header>
 
 <section class="welcome">
-  <h2>오늘도 차근차근!</h2>
-  <p>작은 목표부터 하나씩 완성해 봐요.</p>
+  <div class="eyebrow" id="todayLabel"></div>
+  <h2 id="welcomeTitle">오늘도 차근차근!</h2>
+  <p>작은 계획이 모여 큰 성장을 만들어요.</p>
 </section>
 
-<section class="card">
-  <h3>📅 날짜별 플래너</h3>
-  <div class="date-row">
-    <button class="secondary" id="prev">‹</button>
-    <input type="date" id="date">
-    <button class="secondary" id="next">›</button>
-    <button class="secondary" id="todayBtn">오늘</button>
-  </div>
-  <div class="progress-info">
-    <span>선택한 날짜</span>
-    <span id="dateText"></span>
-  </div>
-</section>
+<div class="grid">
 
-<section class="card">
-  <h3>📝 오늘의 할 일</h3>
-  <form class="add-row" id="taskForm">
-    <input id="taskInput" placeholder="할 일을 입력하세요" maxlength="100">
-    <button class="primary">추가</button>
-  </form>
+  <section class="card">
+    <div class="head">
+      <h3>📅 날짜별 플래너</h3>
+      <span class="note">날짜 선택</span>
+    </div>
+    <div class="date-row">
+      <button class="soft-btn" id="prevDay">‹</button>
+      <input type="date" id="datePicker" aria-label="날짜 선택">
+      <button class="soft-btn" id="nextDay">›</button>
+    </div>
+    <div class="date-caption" id="dateCaption"></div>
+  </section>
 
-  <div id="taskList"></div>
+  <section class="card dday-card">
+    <div class="head">
+      <h3>🎯 D-day</h3>
+      <span class="note">목표일까지</span>
+    </div>
+    <form class="dday-form" id="ddayForm">
+      <input id="ddayName" placeholder="시험 / 목표 이름" maxlength="30" required>
+      <input id="ddayDate" type="date" required aria-label="D-day 날짜">
+      <button class="btn">설정</button>
+    </form>
+    <div class="dday-result" id="ddayResult" hidden>
+      <div class="dday-number" id="ddayNumber"></div>
+      <div class="dday-detail" id="ddayDetail"></div>
+      <button class="dday-delete" id="ddayDelete" type="button">삭제</button>
+    </div>
+  </section>
 
-  <div class="progress-info">
-    <span>오늘의 달성률</span>
-    <strong id="percent">0%</strong>
-  </div>
-  <div class="progress">
-    <div id="progressBar"></div>
-  </div>
-</section>
+  <section class="card full">
+    <div class="head">
+      <h3>📝 오늘의 할 일</h3>
+      <span class="note" id="taskCount"></span>
+    </div>
+    <form class="add-row" id="taskForm">
+      <input id="taskInput" placeholder="예: 수학 문제집 3쪽 풀기" maxlength="100" required>
+      <button class="btn">+ 추가</button>
+    </form>
+    <div class="task-list" id="taskList"></div>
+    <div class="empty" id="taskEmpty">아직 등록된 할 일이 없어요. 작은 목표부터 추가해 보세요 ✨</div>
+    <div class="progress-info">
+      <span>오늘의 달성률</span>
+      <strong id="progressText">0% · 0/0 완료</strong>
+    </div>
+    <div class="progress"><div id="progressBar"></div></div>
+  </section>
 
-<section class="card">
-  <h3>📖 공부 메모</h3>
-  <textarea id="memo" placeholder="오늘 공부할 내용을 적어보세요."
-    style="width:100%;height:120px;padding:12px;border:1px solid #eceef4;border-radius:10px;resize:vertical;font:14px Arial"></textarea>
-</section>
+  <section class="card">
+    <div class="head">
+      <h3>⏱️ 과목별 스톱워치</h3>
+      <span class="note">공부 시간 기록</span>
+    </div>
+    <div class="timer-subject">
+      <select id="subject">
+        <option>국어</option>
+        <option>영어</option>
+        <option>수학</option>
+        <option>사회</option>
+        <option>과학</option>
+        <option>역사</option>
+        <option>기타</option>
+      </select>
+      <span class="note">선택한 날짜에 저장</span>
+    </div>
+    <div class="timer-display" id="timerDisplay">00:00:00</div>
+    <div class="timer-actions">
+      <button class="btn" id="timerToggle">시작</button>
+      <button class="soft-btn" id="timerSave">기록 저장</button>
+      <button class="soft-btn" id="timerReset">초기화</button>
+    </div>
+    <div class="study-records" id="studyRecords"></div>
+  </section>
 
-<section class="card dday">
-  <h3>🎯 D-DAY 설정</h3>
-  <form class="dday-row" id="ddayForm">
-    <input id="ddayName" placeholder="시험 이름" maxlength="30" required>
-    <input id="ddayDate" type="date" required>
-    <button>설정</button>
-  </form>
-  <div id="ddayResult"></div>
-</section>
+  <section class="card">
+    <div class="head">
+      <h3>🌈 오늘의 컨디션</h3>
+      <span class="note">집중도 체크</span>
+    </div>
+    <div class="mood-list" id="moodList">
+      <button class="mood" data-mood="😫" title="많이 지쳤어요">😫</button>
+      <button class="mood" data-mood="😕" title="조금 아쉬워요">😕</button>
+      <button class="mood" data-mood="😐" title="보통이에요">😐</button>
+      <button class="mood" data-mood="🙂" title="괜찮아요">🙂</button>
+      <button class="mood" data-mood="🤩" title="아주 좋아요">🤩</button>
+    </div>
+    <div class="mood-message" id="moodMessage">오늘의 컨디션을 선택해 보세요.</div>
+  </section>
 
-<footer>나의 공부 기록은 이 브라우저에 자동 저장됩니다 ☁️</footer>
+  <section class="card full">
+    <div class="head">
+      <h3>📖 공부 메모</h3>
+      <span class="note">자동 저장</span>
+    </div>
+    <textarea id="memo" placeholder="오늘 공부할 내용이나 기억하고 싶은 것을 적어보세요."></textarea>
+  </section>
+
 </div>
+<footer>기록은 현재 브라우저에 저장됩니다. 다른 기기와 자동 동기화되지는 않아요.</footer>
+</main>
 
 <script>
-const KEY = "myStudyPlannerV1";
-
 const $ = id => document.getElementById(id);
+const STORAGE_KEY = "studyPlannerCompleteV2";
 
-const now = new Date();
-now.setHours(0,0,0,0);
+const today = new Date();
+today.setHours(0,0,0,0);
 
-function dateString(d) {
-  return [
-    d.getFullYear(),
-    String(d.getMonth()+1).padStart(2,"0"),
-    String(d.getDate()).padStart(2,"0")
-  ].join("-");
+const dateKey = d =>
+  `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+
+const parseDate = s => {
+  const [y,m,d] = s.split("-").map(Number);
+  return new Date(y,m-1,d);
+};
+
+const prettyDate = s =>
+  parseDate(s).toLocaleDateString("ko-KR",{
+    year:"numeric",month:"long",day:"numeric",weekday:"long"
+  });
+
+let selectedDate = dateKey(today);
+let state = {};
+let dark = false;
+let elapsed = 0;
+let running = false;
+let interval = null;
+
+try {
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  state = saved.days || {};
+  dark = !!saved.dark;
+} catch(e) {
+  state = {};
 }
 
-let selected = dateString(now);
-let storage = JSON.parse(localStorage.getItem(KEY) || "{}");
-
-function save() {
-  localStorage.setItem(KEY,JSON.stringify(storage));
+function saveAll() {
+  localStorage.setItem(STORAGE_KEY,JSON.stringify({
+    days:state,
+    dark:dark,
+    dday:dday
+  }));
 }
 
-function getDay() {
-  if(!storage[selected]) {
-    storage[selected] = {
+let dday = null;
+try {
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  dday = saved.dday || null;
+} catch(e) {}
+
+function day() {
+  if(!state[selectedDate]) {
+    state[selectedDate] = {
       tasks:[],
-      memo:""
+      memo:"",
+      mood:"",
+      study:{}
     };
   }
-  return storage[selected];
+  const d = state[selectedDate];
+  if(!Array.isArray(d.tasks)) d.tasks = [];
+  if(!d.study) d.study = {};
+  return d;
 }
 
-function render() {
-  $("date").value = selected;
+function formatTime(seconds) {
+  const h = Math.floor(seconds/3600);
+  const m = Math.floor(seconds%3600/60);
+  const s = seconds%60;
+  return [h,m,s].map(v=>String(v).padStart(2,"0")).join(":");
+}
 
-  const d = new Date(selected+"T00:00:00");
-  $("dateText").textContent =
-    `${d.getFullYear()}.${d.getMonth()+1}.${d.getDate()}`;
+function renderHeader() {
+  $("todayLabel").textContent =
+    today.toLocaleDateString("ko-KR",{year:"numeric",month:"long",day:"numeric"});
 
-  $("today").textContent =
-    `${now.getFullYear()}.${now.getMonth()+1}.${now.getDate()}`;
+  $("datePicker").value = selectedDate;
+  $("dateCaption").textContent = prettyDate(selectedDate);
 
-  $("memo").value = getDay().memo || "";
-
-  renderTasks();
+  $("welcomeTitle").textContent =
+    selectedDate === dateKey(today)
+      ? "오늘도 차근차근!"
+      : prettyDate(selectedDate) + " 계획";
 }
 
 function renderTasks() {
-  const tasks = getDay().tasks;
+  const tasks = day().tasks;
   const list = $("taskList");
+  list.replaceChildren();
 
-  list.innerHTML = "";
-
-  if(tasks.length === 0) {
-    list.innerHTML =
-      '<div class="empty">아직 할 일이 없습니다 ✨</div>';
-  }
+  $("taskEmpty").hidden = tasks.length > 0;
 
   tasks.forEach((task,index) => {
     const row = document.createElement("div");
     row.className = "task" + (task.done ? " done" : "");
 
-    const check = document.createElement("input");
-    check.type = "checkbox";
-    check.checked = task.done;
-
-    check.addEventListener("change",() => {
-      task.done = check.checked;
-      save();
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = !!task.done;
+    checkbox.addEventListener("change",() => {
+      task.done = checkbox.checked;
+      saveAll();
       renderTasks();
     });
 
     const text = document.createElement("span");
+    text.className = "task-text";
     text.textContent = task.text;
+
+    const actions = document.createElement("div");
+    actions.className = "task-actions";
 
     const edit = document.createElement("button");
     edit.textContent = "수정";
-
-    edit.onclick = () => {
-      const value = prompt("수정할 내용을 입력하세요",task.text);
-
-      if(value && value.trim()) {
+    edit.addEventListener("click",() => {
+      const value = prompt("할 일을 수정하세요.",task.text);
+      if(value !== null && value.trim()) {
         task.text = value.trim();
-        save();
+        saveAll();
         renderTasks();
       }
-    };
+    });
 
-    const del = document.createElement("button");
-    del.textContent = "삭제";
-
-    del.onclick = () => {
-      if(confirm("삭제할까요?")) {
+    const remove = document.createElement("button");
+    remove.textContent = "삭제";
+    remove.addEventListener("click",() => {
+      if(confirm("이 할 일을 삭제할까요?")) {
         tasks.splice(index,1);
-        save();
+        saveAll();
         renderTasks();
       }
-    };
+    });
 
-    row.append(check,text,edit,del);
+    actions.append(edit,remove);
+    row.append(checkbox,text,actions);
     list.append(row);
   });
 
-  const done = tasks.filter(t=>t.done).length;
-  const percent = tasks.length ?
-    Math.round(done/tasks.length*100) : 0;
+  const completed = tasks.filter(t=>t.done).length;
+  const percent = tasks.length ? Math.round(completed/tasks.length*100) : 0;
 
-  $("percent").textContent = percent+"%";
-  $("progressBar").style.width = percent+"%";
+  $("taskCount").textContent = `${completed}/${tasks.length} 완료`;
+  $("progressText").textContent = `${percent}% · ${completed}/${tasks.length} 완료`;
+  $("progressBar").style.width = percent + "%";
 }
 
-$("taskForm").addEventListener("submit",e=>{
-  e.preventDefault();
+function renderStudy() {
+  const records = day().study;
+  const box = $("studyRecords");
+  box.replaceChildren();
 
+  const subjects = Object.keys(records);
+  if(subjects.length === 0) {
+    const empty = document.createElement("span");
+    empty.className = "note";
+    empty.textContent = "아직 기록된 공부 시간이 없어요.";
+    box.append(empty);
+    return;
+  }
+
+  subjects.forEach(subject => {
+    const chip = document.createElement("span");
+    chip.className = "chip";
+    chip.textContent = `${subject} ${formatTime(records[subject])}`;
+    box.append(chip);
+  });
+
+  const total = Object.values(records).reduce((sum,n)=>sum+n,0);
+  const totalChip = document.createElement("span");
+  totalChip.className = "chip";
+  totalChip.textContent = `총합 ${formatTime(total)}`;
+  box.append(totalChip);
+}
+
+function renderMood() {
+  const mood = day().mood;
+  document.querySelectorAll(".mood").forEach(button => {
+    button.classList.toggle("active",button.dataset.mood === mood);
+  });
+
+  const messages = {
+    "😫":"오늘은 조금 쉬어가도 괜찮아요.",
+    "😕":"아쉬운 부분은 내일 다시 도전해 봐요.",
+    "😐":"평범한 하루도 충분히 의미 있어요.",
+    "🙂":"좋은 흐름이에요! 계속 이어가 봐요.",
+    "🤩":"최고의 컨디션이네요! 멋져요."
+  };
+
+  $("moodMessage").textContent =
+    messages[mood] || "오늘의 컨디션을 선택해 보세요.";
+}
+
+function renderMemo() {
+  $("memo").value = day().memo || "";
+}
+
+function renderDday() {
+  if(!dday) {
+    $("ddayResult").hidden = true;
+    return;
+  }
+
+  $("ddayResult").hidden = false;
+  $("ddayDetail").textContent = dday.name + " · " + dday.date;
+
+  const target = parseDate(dday.date);
+  const diff = Math.round((target-today)/86400000);
+
+  if(diff > 0) $("ddayNumber").textContent = "D-" + diff;
+  else if(diff === 0) $("ddayNumber").textContent = "D-DAY";
+  else $("ddayNumber").textContent = "D+" + Math.abs(diff);
+}
+
+function renderAll() {
+  renderHeader();
+  renderTasks();
+  renderStudy();
+  renderMood();
+  renderMemo();
+  renderDday();
+}
+
+function changeDate(newDate) {
+  if(!newDate) return;
+
+  if(running) {
+    running = false;
+    clearInterval(interval);
+    interval = null;
+    $("timerToggle").textContent = "시작";
+  }
+
+  selectedDate = newDate;
+  elapsed = 0;
+  $("timerDisplay").textContent = formatTime(elapsed);
+  renderAll();
+}
+
+$("datePicker").addEventListener("change",e=>changeDate(e.target.value));
+
+$("prevDay").addEventListener("click",() => {
+  const d = parseDate(selectedDate);
+  d.setDate(d.getDate()-1);
+  changeDate(dateKey(d));
+});
+
+$("nextDay").addEventListener("click",() => {
+  const d = parseDate(selectedDate);
+  d.setDate(d.getDate()+1);
+  changeDate(dateKey(d));
+});
+
+$("todayBtn").addEventListener("click",() => changeDate(dateKey(today)));
+
+$("taskForm").addEventListener("submit",e => {
+  e.preventDefault();
   const value = $("taskInput").value.trim();
   if(!value) return;
 
-  getDay().tasks.push({
-    text:value,
-    done:false
-  });
-
+  day().tasks.push({text:value,done:false});
   $("taskInput").value = "";
-  save();
+  saveAll();
   renderTasks();
 });
 
-$("date").addEventListener("change",e=>{
-  if(e.target.value) {
-    selected = e.target.value;
-    render();
-  }
+$("memo").addEventListener("input",() => {
+  day().memo = $("memo").value;
+  saveAll();
 });
 
-function moveDate(amount) {
-  const d = new Date(selected+"T00:00:00");
-  d.setDate(d.getDate()+amount);
-  selected = dateString(d);
-  render();
-}
-
-$("prev").onclick = ()=>moveDate(-1);
-$("next").onclick = ()=>moveDate(1);
-
-$("todayBtn").onclick = ()=>{
-  selected = dateString(now);
-  render();
-};
-
-$("memo").addEventListener("input",()=>{
-  getDay().memo = $("memo").value;
-  save();
+document.querySelectorAll(".mood").forEach(button => {
+  button.addEventListener("click",() => {
+    day().mood = button.dataset.mood;
+    saveAll();
+    renderMood();
+  });
 });
 
-$("ddayForm").addEventListener("submit",e=>{
+$("ddayForm").addEventListener("submit",e => {
   e.preventDefault();
-
-  const name = $("ddayName").value.trim();
-  const date = $("ddayDate").value;
-
-  if(!name || !date) return;
-
-  storage.dday = {name,date};
-  save();
+  dday = {
+    name:$("ddayName").value.trim(),
+    date:$("ddayDate").value
+  };
+  saveAll();
   renderDday();
 });
 
-function renderDday() {
-  const item = storage.dday;
-  if(!item) return;
+$("ddayDelete").addEventListener("click",() => {
+  if(confirm("D-day 목표를 삭제할까요?")) {
+    dday = null;
+    saveAll();
+    renderDday();
+  }
+});
 
-  const target = new Date(item.date+"T00:00:00");
-  const diff = Math.round((target-now)/86400000);
-
-  let result = diff > 0 ? "D-"+diff :
-               diff < 0 ? "D+"+Math.abs(diff) : "D-DAY";
-
-  $("ddayResult").textContent = "";
-
-  const number = document.createElement("div");
-  number.id = "ddayNumber";
-  number.textContent = result;
-
-  const name = document.createElement("div");
-  name.textContent = item.name;
-
-  const date = document.createElement("div");
-  date.textContent = item.date;
-
-  const del = document.createElement("button");
-  del.textContent = "D-day 삭제";
-  del.style.marginTop = "10px";
-  del.onclick = ()=>{
-    delete storage.dday;
-    save();
-    $("ddayResult").innerHTML = "";
-    $("ddayName").value = "";
-    $("ddayDate").value = "";
-  };
-
-  $("ddayResult").append(number,name,date,del);
+function updateTimer() {
+  $("timerDisplay").textContent = formatTime(elapsed);
 }
 
-render();
-renderDday();
+$("timerToggle").addEventListener("click",() => {
+  if(!running) {
+    running = true;
+    $("timerToggle").textContent = "일시정지";
+    interval = setInterval(() => {
+      elapsed++;
+      updateTimer();
+    },1000);
+  } else {
+    running = false;
+    clearInterval(interval);
+    interval = null;
+    $("timerToggle").textContent = "다시 시작";
+  }
+});
+
+$("timerSave").addEventListener("click",() => {
+  if(running) {
+    running = false;
+    clearInterval(interval);
+    interval = null;
+    $("timerToggle").textContent = "시작";
+  }
+
+  if(elapsed <= 0) {
+    alert("먼저 스톱워치를 실행해 주세요.");
+    return;
+  }
+
+  const subject = $("subject").value;
+  const records = day().study;
+  records[subject] = (records[subject] || 0) + elapsed;
+
+  elapsed = 0;
+  updateTimer();
+  saveAll();
+  renderStudy();
+  alert("공부 시간이 저장되었습니다!");
+});
+
+$("timerReset").addEventListener("click",() => {
+  if(running) {
+    running = false;
+    clearInterval(interval);
+    interval = null;
+  }
+  elapsed = 0;
+  updateTimer();
+  $("timerToggle").textContent = "시작";
+});
+
+$("themeBtn").addEventListener("click",() => {
+  dark = !dark;
+  applyTheme();
+  saveAll();
+});
+
+function applyTheme() {
+  document.body.classList.toggle("dark",dark);
+  $("themeBtn").textContent = dark ? "☀" : "☾";
+}
+
+applyTheme();
+renderAll();
+updateTimer();
 </script>
 </body>
 </html>
+
