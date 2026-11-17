@@ -4,656 +4,772 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>오늘의 공부 플래너</title>
+<meta name="theme-color" content="#f5f6fb">
+<title>STUDY DAY - 학습 플래너</title>
 <style>
-:root {
-  --bg:#f5f6fb; --card:#fff; --text:#25283a; --muted:#85899b;
-  --line:#eceef4; --primary:#7477df; --soft:#eeeeff;
-  --input:#fafaff; --green:#42ad91;
+:root{
+ --bg:#f5f6fb;--card:#fff;--text:#25283a;--muted:#9295a7;
+ --line:#eceef4;--primary:#7779df;--soft:#eeeeff;
+ --input:#f8f8fd;--green:#46ad91;--shadow:0 5px 25px #25283a0a;
 }
-body.dark {
-  --bg:#171925; --card:#222638; --text:#f0f1fa; --muted:#a3a7ba;
-  --line:#373b50; --primary:#a2a1ff; --soft:#353451;
-  --input:#2b3044; --green:#65c7a9;
+body.dark{
+ --bg:#171925;--card:#222638;--text:#f0f1fa;--muted:#a3a7ba;
+ --line:#373b50;--primary:#a2a1ff;--soft:#353451;
+ --input:#2b3044;--green:#65c7a9;--shadow:0 5px 25px #0002;
 }
-* {box-sizing:border-box}
-body {
-  margin:0; padding:22px 12px 40px; background:var(--bg);
-  color:var(--text); font-family:Arial,"Noto Sans KR",sans-serif;
-  transition:.2s;
+*{box-sizing:border-box}
+body{
+ margin:0;background:var(--bg);color:var(--text);
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",sans-serif;
+ transition:.2s;
 }
-button,input,textarea,select {font:inherit}
-button {cursor:pointer}
-.app {max-width:850px;margin:auto}
-header {
-  display:flex;align-items:center;justify-content:space-between;
-  gap:12px;margin-bottom:23px
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+ outline:2px solid var(--primary);outline-offset:2px
 }
-.brand {display:flex;align-items:center;gap:11px}
-.logo {
-  width:43px;height:43px;border-radius:15px;display:grid;
-  place-items:center;background:linear-gradient(135deg,#8588ed,#666bd0);
-  color:white;font-size:22px
+.layout{display:flex;min-height:100vh}
+.sidebar{
+ width:235px;background:var(--card);border-right:1px solid var(--line);
+ padding:25px 16px;position:fixed;inset:0 auto 0 0;z-index:5;
+ display:flex;flex-direction:column;
 }
-h1 {font-size:20px;margin:0}
-.sub {font-size:12px;color:var(--muted);margin-top:4px}
-.header-actions {display:flex;gap:8px}
-.header-btn {
-  width:40px;height:40px;border:1px solid var(--line);
-  background:var(--card);color:var(--text);border-radius:12px;font-size:18px
+.logo{display:flex;align-items:center;gap:11px;padding:0 10px 30px}
+.logo-icon{
+ width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+ color:white;font-size:21px;background:linear-gradient(135deg,#898bf0,#666bd0)
 }
-.welcome {
-  padding:25px 26px;border-radius:21px;
-  background:linear-gradient(120deg,#7477df,#999af1);
-  color:white;margin-bottom:17px
+.logo strong{font-size:17px;letter-spacing:-.5px}
+.logo small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.nav-title{font-size:10px;color:var(--muted);padding:0 12px 9px}
+.nav{display:grid;gap:6px}
+.nav button{
+ display:flex;align-items:center;gap:12px;width:100%;padding:12px;
+ border:0;border-radius:12px;background:transparent;color:var(--muted);
+ text-align:left;font-size:13px;font-weight:600
 }
-.welcome .eyebrow {font-size:11px;opacity:.85}
-.welcome h2 {font-size:24px;margin:8px 0 6px}
-.welcome p {font-size:13px;margin:0;opacity:.9}
-.grid {
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:15px;align-items:start
+.nav button.active{background:var(--soft);color:var(--primary)}
+.nav button span:first-child{font-size:18px;width:22px;text-align:center}
+.side-bottom{margin-top:auto}
+.theme-btn{
+ width:100%;padding:12px;border:1px solid var(--line);
+ border-radius:12px;background:var(--input);color:var(--text);text-align:left
 }
-.card {
-  background:var(--card);border:1px solid var(--line);
-  border-radius:18px;padding:19px;min-width:0
+.main{margin-left:235px;width:calc(100% - 235px);padding:32px 35px 50px}
+.container{max-width:1050px;margin:auto}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px;gap:12px}
+.page-title{font-size:23px;font-weight:800;letter-spacing:-.7px}
+.page-sub{font-size:12px;color:var(--muted);margin-top:5px}
+.today-pill{background:var(--soft);color:var(--primary);padding:9px 12px;border-radius:12px;font-size:12px;font-weight:700}
+.page{display:none;animation:appear .2s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:.5;transform:translateY(4px)}to{opacity:1;transform:none}}
+.card{
+ background:var(--card);border:1px solid var(--line);border-radius:19px;
+ padding:21px;box-shadow:var(--shadow);min-width:0
 }
-.full {grid-column:1/-1}
-.head {
-  display:flex;justify-content:space-between;
-  align-items:center;gap:10px;margin-bottom:15px
+.card-title{font-size:15px;font-weight:800;margin:0}
+.card-sub{font-size:11px;color:var(--muted);margin-top:5px}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:17px}
+.hero{
+ padding:28px;border-radius:22px;color:white;
+ background:linear-gradient(120deg,#7477df,#a09ff3);margin-bottom:17px
 }
-h3 {font-size:15px;margin:0}
-.note {font-size:11px;color:var(--muted)}
-.date-row {display:flex;gap:7px}
-.date-row input {flex:1;min-width:0}
-input,textarea,select {
-  background:var(--input);color:var(--text);
-  border:1px solid var(--line);border-radius:10px;
-  padding:10px 11px;outline:none
+.hero small{opacity:.85;font-size:12px}
+.hero h2{font-size:25px;margin:9px 0}
+.hero p{font-size:13px;opacity:.9;margin:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:17px}
+.stat{padding:18px;background:var(--card);border:1px solid var(--line);border-radius:17px}
+.stat-icon{font-size:20px}
+.stat-number{font-size:23px;font-weight:800;margin:9px 0 4px}
+.stat-label{font-size:11px;color:var(--muted)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.stack{display:grid;gap:15px}
+input,textarea,select{
+ background:var(--input);color:var(--text);border:1px solid var(--line);
+ border-radius:11px;padding:11px 12px;min-width:0
 }
-input:focus,textarea:focus,select:focus {border-color:var(--primary)}
-.btn {
-  border:0;background:var(--primary);color:white;
-  border-radius:10px;padding:10px 14px;font-weight:700
+textarea{width:100%;min-height:150px;resize:vertical;line-height:1.7}
+.btn{
+ border:0;background:var(--primary);color:white;padding:11px 15px;
+ border-radius:11px;font-weight:700;font-size:12px
 }
-.soft-btn {
-  border:1px solid var(--line);background:var(--input);
-  color:var(--text);border-radius:10px;padding:9px 11px
+.btn.secondary{background:var(--soft);color:var(--primary)}
+.btn.danger{background:#fff0f0;color:#d66c6c}
+body.dark .btn.danger{background:#493039;color:#ffaaaa}
+.icon-btn{
+ border:1px solid var(--line);background:var(--input);color:var(--text);
+ border-radius:9px;padding:8px 10px;font-size:12px
 }
-.date-caption {font-size:12px;color:var(--muted);margin-top:11px}
-.add-row {display:flex;gap:8px;margin-bottom:12px}
-.add-row input {flex:1;min-width:0}
-.task-list {display:grid;gap:7px}
-.task {
-  display:flex;align-items:center;gap:9px;
-  background:var(--input);border-radius:11px;padding:10px
+.date-control{display:flex;gap:7px;align-items:center}
+.date-control input{flex:1;width:100%}
+.date-control button{padding:10px 13px}
+.muted{font-size:11px;color:var(--muted)}
+.progress{height:8px;background:var(--line);border-radius:20px;overflow:hidden}
+.progress div{height:100%;background:var(--green);border-radius:20px;transition:.2s}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:14px 0 8px}
+.task-form{display:flex;gap:8px;margin-bottom:14px}
+.task-form input{flex:1;width:100%}
+.task-list{display:grid;gap:8px}
+.task{
+ display:flex;align-items:center;gap:10px;padding:12px;
+ background:var(--input);border:1px solid var(--line);border-radius:12px
 }
-.task input {accent-color:var(--primary);width:17px;height:17px}
-.task-text {flex:1;min-width:0;font-size:13px;overflow-wrap:anywhere}
-.task.done .task-text {text-decoration:line-through;color:var(--muted)}
-.task-actions {display:flex;gap:3px}
-.task-actions button {
+.task input{width:17px;height:17px;accent-color:var(--primary)}
+.task-name{flex:1;font-size:13px;overflow-wrap:anywhere}
+.task.done .task-name{text-decoration:line-through;color:var(--muted)}
+.task-subject{font-size:10px;color:var(--primary);background:var(--soft);padding:5px 7px;border-radius:7px}
+.task-actions{display:flex;gap:4px}
+.task-actions button{border:0;background:transparent;color:var(--muted);font-size:11px;padding:5px}
+.empty{text-align:center;color:var(--muted);font-size:12px;padding:22px 5px}
+.filter-row{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
+.filter-row button{
+ border:1px solid var(--line);background:var(--card);color:var(--muted);
+ border-radius:20px;padding:8px 12px;font-size:11px
+}
+.filter-row button.active{background:var(--soft);border-color:var(--primary);color:var(--primary)}
+.timer-box{text-align:center;padding:28px 10px}
+.timer-subject{max-width:300px;width:100%}
+.timer-display{
+ font-size:clamp(38px,7vw,58px);font-weight:800;letter-spacing:2px;
+ font-variant-numeric:tabular-nums;margin:25px 0
+}
+.timer-buttons{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.timer-buttons button{min-width:95px}
+.subject-records{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.subject-record{
+ display:flex;justify-content:space-between;align-items:center;
+ padding:12px;background:var(--input);border-radius:11px;font-size:12px
+}
+.subject-record strong{color:var(--primary)}
+.total-time{font-size:12px;color:var(--muted);margin-top:14px;text-align:right}
+.moods{display:flex;gap:10px;flex-wrap:wrap}
+.mood{
+ border:1px solid var(--line);background:var(--input);
+ border-radius:13px;padding:12px;font-size:25px
+}
+.mood.active{border:2px solid var(--primary);background:var(--soft);padding:11px}
+.mood-desc{font-size:12px;color:var(--muted);margin-top:13px}
+.dday-form{display:flex;gap:8px;flex-wrap:wrap}
+.dday-form input:first-child{flex:1}
+.dday-form input[type=date]{flex:1}
+.dday-item{
+ display:flex;align-items:center;gap:12px;padding:14px;
+ border:1px solid var(--line);border-radius:13px;background:var(--input)
+}
+.dday-count{font-size:21px;font-weight:900;color:var(--primary);min-width:75px}
+.dday-info{flex:1;min-width:0}
+.dday-info strong{font-size:13px}
+.dday-info small{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+.bottom-nav{display:none}
+@media(max-width:760px){
+ .sidebar{display:none}
+ .main{margin:0;width:100%;padding:22px 15px 100px}
+ .topbar{margin-bottom:19px}
+ .page-title{font-size:21px}
+ .hero{padding:22px}
+ .hero h2{font-size:22px}
+ .stats{gap:8px}
+ .stat{padding:13px}
+ .stat-number{font-size:20px}
+ .stat-label{font-size:10px}
+ .two-col{grid-template-columns:1fr}
+ .card{padding:17px}
+ .bottom-nav{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  position:fixed;bottom:0;left:0;right:0;z-index:10;
+  background:var(--card);border-top:1px solid var(--line);
+  padding:8px 5px max(8px,env(safe-area-inset-bottom));
+  box-shadow:0 -5px 20px #0000000a
+ }
+ .bottom-nav button{
   border:0;background:transparent;color:var(--muted);
-  font-size:11px;padding:5px
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  font-size:10px;padding:5px 1px
+ }
+ .bottom-nav button span{font-size:19px}
+ .bottom-nav button.active{color:var(--primary);font-weight:800}
+ .subject-records{grid-template-columns:1fr}
+ .timer-box{padding:20px 5px}
 }
-.empty {text-align:center;color:var(--muted);font-size:12px;padding:17px 5px}
-.progress-info {
-  display:flex;justify-content:space-between;
-  color:var(--muted);font-size:11px;margin:14px 0 7px
-}
-.progress {height:7px;border-radius:20px;background:var(--line);overflow:hidden}
-.progress>div {
-  height:100%;background:var(--green);border-radius:20px;transition:.2s
-}
-textarea {width:100%;min-height:110px;resize:vertical;line-height:1.6;font-size:13px}
-.dday-card {
-  background:linear-gradient(120deg,#7477df,#9698ef);
-  color:white;border:0
-}
-.dday-card .note {color:#e6e6ff}
-.dday-form {display:flex;gap:7px}
-.dday-form input {
-  min-width:0;flex:1;background:#ffffff20;
-  color:white;border-color:#ffffff60
-}
-.dday-form input::placeholder {color:#eee}
-.dday-form input[type=date] {color-scheme:dark}
-.dday-form button {background:white;color:#666bd0}
-.dday-result {display:flex;align-items:center;gap:12px;margin-top:14px}
-.dday-number {font-size:30px;font-weight:900}
-.dday-detail {font-size:12px;line-height:1.5;color:#f0f0ff}
-.dday-delete {
-  margin-left:auto;background:transparent;color:white;
-  border:1px solid #ffffff70;border-radius:8px;padding:7px;font-size:11px
-}
-.timer-subject {display:flex;gap:8px;align-items:center}
-.timer-subject select {flex:1;min-width:0}
-.timer-display {
-  text-align:center;font-size:39px;font-weight:800;
-  letter-spacing:2px;margin:20px 0 15px;font-variant-numeric:tabular-nums
-}
-.timer-actions {display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
-.timer-actions button {min-width:85px}
-.study-records {display:flex;flex-wrap:wrap;gap:7px;margin-top:15px}
-.chip {
-  background:var(--soft);color:var(--primary);
-  padding:7px 9px;border-radius:9px;font-size:11px
-}
-.mood-list {display:flex;gap:8px;flex-wrap:wrap}
-.mood {
-  font-size:22px;background:var(--input);
-  border:1px solid var(--line);border-radius:12px;padding:8px 11px
-}
-.mood.active {
-  background:var(--soft);border:2px solid var(--primary);padding:7px 10px
-}
-.mood-message {font-size:12px;color:var(--muted);margin-top:11px}
-footer {text-align:center;color:var(--muted);font-size:11px;padding:18px 0 0}
-@media(max-width:650px) {
-  body {padding:15px 10px 30px}
-  .grid {grid-template-columns:1fr;gap:12px}
-  .full {grid-column:auto}
-  .card {padding:16px}
-  .welcome {padding:21px}
-  .welcome h2 {font-size:21px}
-  .dday-form {flex-wrap:wrap}
-  .dday-form input:first-child {flex-basis:100%}
-  .timer-display {font-size:34px}
+@media(max-width:380px){
+ .today-pill{font-size:10px;padding:8px}
+ .stats{grid-template-columns:1fr 1fr}
+ .stats .stat:last-child{grid-column:1/-1}
+ .task-subject{display:none}
 }
 </style>
 </head>
 <body>
-<main class="app">
+<div class="layout">
 
-<header>
-  <div class="brand">
-    <div class="logo">✦</div>
-    <div>
-      <h1>오늘의 공부 플래너</h1>
-      <div class="sub">나만의 공부 루틴을 만들어봐요</div>
-    </div>
-  </div>
-  <div class="header-actions">
-    <button class="header-btn" id="todayBtn" title="오늘로 이동">⌂</button>
-    <button class="header-btn" id="themeBtn" title="다크 모드 전환">☾</button>
-  </div>
-</header>
+<aside class="sidebar">
+ <div class="logo">
+  <div class="logo-icon">✦</div>
+  <div><strong>STUDY DAY</strong><small>MY STUDY PLANNER</small></div>
+ </div>
+ <div class="nav-title">MENU</div>
+ <nav class="nav">
+  <button class="active" data-page="home"><span>⌂</span>홈</button>
+  <button data-page="check"><span>☑</span>공부 체크리스트</button>
+  <button data-page="timer"><span>◷</span>공부 시간</button>
+  <button data-page="condition"><span>☀</span>컨디션 & 메모</button>
+  <button data-page="goals"><span>◎</span>목표 & D-day</button>
+ </nav>
+ <div class="side-bottom">
+  <button class="theme-btn" id="themeButton">☾　다크 모드</button>
+ </div>
+</aside>
 
-<section class="welcome">
-  <div class="eyebrow" id="todayLabel"></div>
-  <h2 id="welcomeTitle">오늘도 차근차근!</h2>
-  <p>작은 계획이 모여 큰 성장을 만들어요.</p>
+<main class="main">
+<div class="container">
+
+<div class="topbar">
+ <div>
+  <div class="page-title" id="pageTitle">홈</div>
+  <div class="page-sub" id="pageSub">오늘의 공부 현황을 확인해 보세요.</div>
+ </div>
+ <div class="today-pill" id="todayPill"></div>
+</div>
+
+<!-- 홈 -->
+<section class="page active" id="page-home">
+ <div class="hero">
+  <small id="heroDate"></small>
+  <h2 id="heroGreeting">오늘도 차근차근!</h2>
+  <p>조금씩 꾸준하게, 나만의 속도로 성장하기.</p>
+ </div>
+
+ <div class="stats">
+  <div class="stat">
+   <div class="stat-icon">📚</div>
+   <div class="stat-number" id="homeTasks">0/0</div>
+   <div class="stat-label">완료한 공부 계획</div>
+  </div>
+  <div class="stat">
+   <div class="stat-icon">⏱️</div>
+   <div class="stat-number" id="homeTime">0분</div>
+   <div class="stat-label">오늘 공부한 시간</div>
+  </div>
+  <div class="stat">
+   <div class="stat-icon">🌈</div>
+   <div class="stat-number" id="homeMood">-</div>
+   <div class="stat-label">오늘의 컨디션</div>
+  </div>
+ </div>
+
+ <div class="stack">
+  <div class="card">
+   <div class="card-head">
+    <div><h3 class="card-title">📅 날짜 선택</h3><div class="card-sub">과거와 미래의 기록도 확인할 수 있어요.</div></div>
+   </div>
+   <div class="date-control">
+    <button class="icon-btn" id="prevDate">‹</button>
+    <input type="date" id="datePicker">
+    <button class="icon-btn" id="nextDate">›</button>
+   </div>
+   <div class="muted" id="selectedDateText" style="margin-top:10px"></div>
+  </div>
+
+  <div class="card">
+   <div class="card-head">
+    <div><h3 class="card-title">✨ 오늘의 달성률</h3><div class="card-sub">체크리스트 완료 현황</div></div>
+    <strong id="homePercent">0%</strong>
+   </div>
+   <div class="progress"><div id="homeProgress" style="width:0%"></div></div>
+   <div class="progress-label"><span>공부 계획 실천</span><span id="homeProgressText">0 / 0</span></div>
+   <button class="btn secondary" data-go="check">체크리스트 확인하기 →</button>
+  </div>
+
+  <div class="card">
+   <div class="card-head"><h3 class="card-title">📖 오늘의 공부 메모</h3></div>
+   <div id="homeMemo" class="muted">아직 작성된 메모가 없어요.</div>
+   <button class="btn secondary" data-go="condition" style="margin-top:14px">메모 작성하기 →</button>
+  </div>
+ </div>
 </section>
 
-<div class="grid">
+<!-- 체크리스트 -->
+<section class="page" id="page-check">
+ <div class="card">
+  <div class="card-head">
+   <div><h3 class="card-title">☑ 공부 체크리스트</h3><div class="card-sub">과목별 공부 계획을 만들고 완료 여부를 체크하세요.</div></div>
+  </div>
+  <form class="task-form" id="taskForm">
+   <input id="taskInput" placeholder="오늘 공부할 내용을 입력하세요." maxlength="100" required>
+   <button class="btn">추가</button>
+  </form>
+  <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+   <select id="taskSubject" style="flex:1">
+    <option>국어</option><option>영어</option><option>수학</option>
+    <option>사회</option><option>과학</option><option>역사</option><option>기타</option>
+   </select>
+  </div>
+  <div class="filter-row">
+   <button class="active" data-filter="all">전체</button>
+   <button data-filter="todo">미완료</button>
+   <button data-filter="done">완료</button>
+  </div>
+  <div class="task-list" id="taskList"></div>
+  <div class="empty" id="taskEmpty">등록된 공부 계획이 없습니다.</div>
+  <div class="progress-label"><span>오늘의 달성률</span><strong id="taskProgressText">0% · 0/0</strong></div>
+  <div class="progress"><div id="taskProgress" style="width:0%"></div></div>
+ </div>
+</section>
 
-  <section class="card">
-    <div class="head">
-      <h3>📅 날짜별 플래너</h3>
-      <span class="note">날짜 선택</span>
-    </div>
-    <div class="date-row">
-      <button class="soft-btn" id="prevDay">‹</button>
-      <input type="date" id="datePicker" aria-label="날짜 선택">
-      <button class="soft-btn" id="nextDay">›</button>
-    </div>
-    <div class="date-caption" id="dateCaption"></div>
-  </section>
-
-  <section class="card dday-card">
-    <div class="head">
-      <h3>🎯 D-day</h3>
-      <span class="note">목표일까지</span>
-    </div>
-    <form class="dday-form" id="ddayForm">
-      <input id="ddayName" placeholder="시험 / 목표 이름" maxlength="30" required>
-      <input id="ddayDate" type="date" required aria-label="D-day 날짜">
-      <button class="btn">설정</button>
-    </form>
-    <div class="dday-result" id="ddayResult" hidden>
-      <div class="dday-number" id="ddayNumber"></div>
-      <div class="dday-detail" id="ddayDetail"></div>
-      <button class="dday-delete" id="ddayDelete" type="button">삭제</button>
-    </div>
-  </section>
-
-  <section class="card full">
-    <div class="head">
-      <h3>📝 오늘의 할 일</h3>
-      <span class="note" id="taskCount"></span>
-    </div>
-    <form class="add-row" id="taskForm">
-      <input id="taskInput" placeholder="예: 수학 문제집 3쪽 풀기" maxlength="100" required>
-      <button class="btn">+ 추가</button>
-    </form>
-    <div class="task-list" id="taskList"></div>
-    <div class="empty" id="taskEmpty">아직 등록된 할 일이 없어요. 작은 목표부터 추가해 보세요 ✨</div>
-    <div class="progress-info">
-      <span>오늘의 달성률</span>
-      <strong id="progressText">0% · 0/0 완료</strong>
-    </div>
-    <div class="progress"><div id="progressBar"></div></div>
-  </section>
-
-  <section class="card">
-    <div class="head">
-      <h3>⏱️ 과목별 스톱워치</h3>
-      <span class="note">공부 시간 기록</span>
-    </div>
-    <div class="timer-subject">
-      <select id="subject">
-        <option>국어</option>
-        <option>영어</option>
-        <option>수학</option>
-        <option>사회</option>
-        <option>과학</option>
-        <option>역사</option>
-        <option>기타</option>
-      </select>
-      <span class="note">선택한 날짜에 저장</span>
-    </div>
+<!-- 공부 시간 -->
+<section class="page" id="page-timer">
+ <div class="stack">
+  <div class="card">
+   <div class="card-head">
+    <div><h3 class="card-title">⏱️ 공부 스톱워치</h3><div class="card-sub">과목을 선택하고 공부 시간을 측정하세요.</div></div>
+   </div>
+   <div class="timer-box">
+    <select class="timer-subject" id="timerSubject">
+     <option>국어</option><option>영어</option><option>수학</option>
+     <option>사회</option><option>과학</option><option>역사</option><option>기타</option>
+    </select>
     <div class="timer-display" id="timerDisplay">00:00:00</div>
-    <div class="timer-actions">
-      <button class="btn" id="timerToggle">시작</button>
-      <button class="soft-btn" id="timerSave">기록 저장</button>
-      <button class="soft-btn" id="timerReset">초기화</button>
+    <div class="timer-buttons">
+     <button class="btn" id="timerToggle">▶ 시작</button>
+     <button class="btn secondary" id="timerSave">기록 저장</button>
+     <button class="icon-btn" id="timerReset">초기화</button>
     </div>
-    <div class="study-records" id="studyRecords"></div>
-  </section>
+    <div class="muted" style="margin-top:15px">기록 저장을 눌러야 공부 시간에 반영됩니다.</div>
+   </div>
+  </div>
+  <div class="card">
+   <div class="card-head">
+    <div><h3 class="card-title">📊 과목별 공부 시간</h3><div class="card-sub" id="studyDateLabel"></div></div>
+   </div>
+   <div class="subject-records" id="subjectRecords"></div>
+   <div class="total-time" id="totalStudyTime">총 공부 시간: 00:00:00</div>
+  </div>
+ </div>
+</section>
 
-  <section class="card">
-    <div class="head">
-      <h3>🌈 오늘의 컨디션</h3>
-      <span class="note">집중도 체크</span>
-    </div>
-    <div class="mood-list" id="moodList">
-      <button class="mood" data-mood="😫" title="많이 지쳤어요">😫</button>
-      <button class="mood" data-mood="😕" title="조금 아쉬워요">😕</button>
-      <button class="mood" data-mood="😐" title="보통이에요">😐</button>
-      <button class="mood" data-mood="🙂" title="괜찮아요">🙂</button>
-      <button class="mood" data-mood="🤩" title="아주 좋아요">🤩</button>
-    </div>
-    <div class="mood-message" id="moodMessage">오늘의 컨디션을 선택해 보세요.</div>
-  </section>
+<!-- 컨디션 -->
+<section class="page" id="page-condition">
+ <div class="stack">
+  <div class="card">
+   <div class="card-head">
+    <div><h3 class="card-title">🌈 오늘의 컨디션</h3><div class="card-sub">오늘의 집중도와 기분을 기록해 보세요.</div></div>
+   </div>
+   <div class="moods" id="moodButtons">
+    <button class="mood" data-mood="😫">😫</button>
+    <button class="mood" data-mood="😕">😕</button>
+    <button class="mood" data-mood="😐">😐</button>
+    <button class="mood" data-mood="🙂">🙂</button>
+    <button class="mood" data-mood="🤩">🤩</button>
+   </div>
+   <div class="mood-desc" id="moodDescription">오늘의 컨디션을 선택해 주세요.</div>
+  </div>
+  <div class="card">
+   <div class="card-head">
+    <div><h3 class="card-title">📝 공부 메모</h3><div class="card-sub">입력한 내용은 자동으로 저장됩니다.</div></div>
+   </div>
+   <textarea id="memo" placeholder="오늘 공부한 내용, 내일 할 일, 기억하고 싶은 내용을 적어보세요."></textarea>
+   <div class="muted" style="text-align:right;margin-top:8px" id="memoStatus">자동 저장</div>
+  </div>
+ </div>
+</section>
 
-  <section class="card full">
-    <div class="head">
-      <h3>📖 공부 메모</h3>
-      <span class="note">자동 저장</span>
-    </div>
-    <textarea id="memo" placeholder="오늘 공부할 내용이나 기억하고 싶은 것을 적어보세요."></textarea>
-  </section>
+<!-- 목표 -->
+<section class="page" id="page-goals">
+ <div class="stack">
+  <div class="card">
+   <div class="card-head">
+    <div><h3 class="card-title">🎯 새로운 D-day 만들기</h3><div class="card-sub">시험이나 이루고 싶은 목표를 등록하세요.</div></div>
+   </div>
+   <form class="dday-form" id="ddayForm">
+    <input id="ddayName" placeholder="예: 기말고사" maxlength="35" required>
+    <input id="ddayDate" type="date" required>
+    <button class="btn">목표 추가</button>
+   </form>
+  </div>
+  <div class="card">
+   <div class="card-head">
+    <div><h3 class="card-title">📌 나의 목표</h3><div class="card-sub">등록한 D-day를 관리할 수 있어요.</div></div>
+   </div>
+   <div class="stack" id="ddayList"></div>
+   <div class="empty" id="ddayEmpty">아직 등록된 목표가 없습니다.</div>
+  </div>
+ </div>
+</section>
 
 </div>
-<footer>기록은 현재 브라우저에 저장됩니다. 다른 기기와 자동 동기화되지는 않아요.</footer>
 </main>
+</div>
+
+<nav class="bottom-nav">
+ <button class="active" data-page="home"><span>⌂</span>홈</button>
+ <button data-page="check"><span>☑</span>체크리스트</button>
+ <button data-page="timer"><span>◷</span>공부 시간</button>
+ <button data-page="condition"><span>☀</span>컨디션</button>
+ <button data-page="goals"><span>◎</span>목표</button>
+</nav>
 
 <script>
 const $ = id => document.getElementById(id);
-const STORAGE_KEY = "studyPlannerCompleteV2";
-
-const today = new Date();
-today.setHours(0,0,0,0);
-
-const dateKey = d =>
-  `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-
-const parseDate = s => {
-  const [y,m,d] = s.split("-").map(Number);
-  return new Date(y,m-1,d);
+const KEY = "studyDayPlannerV3";
+const subjects = ["국어","영어","수학","사회","과학","역사","기타"];
+const moodText = {
+ "😫":"오늘은 조금 쉬어가도 괜찮아요.",
+ "😕":"아쉬운 부분은 내일 다시 도전해 봐요.",
+ "😐":"평범한 하루도 충분히 의미 있어요.",
+ "🙂":"좋은 흐름이에요! 계속 이어가 봐요.",
+ "🤩":"최고의 컨디션이네요!"
+};
+const pageInfo = {
+ home:["홈","오늘의 공부 현황을 확인해 보세요."],
+ check:["공부 체크리스트","과목별 계획을 관리해 보세요."],
+ timer:["공부 시간","집중한 시간을 기록해 보세요."],
+ condition:["컨디션 & 메모","오늘의 기분과 공부 내용을 기록하세요."],
+ goals:["목표 & D-day","목표를 정하고 날짜를 관리하세요."]
 };
 
-const prettyDate = s =>
-  parseDate(s).toLocaleDateString("ko-KR",{
-    year:"numeric",month:"long",day:"numeric",weekday:"long"
-  });
+const now = new Date();
+now.setHours(0,0,0,0);
+const keyDate = d => [
+ d.getFullYear(),
+ String(d.getMonth()+1).padStart(2,"0"),
+ String(d.getDate()).padStart(2,"0")
+].join("-");
+const parseDate = s => {
+ const [y,m,d] = s.split("-").map(Number);
+ return new Date(y,m-1,d);
+};
+const readableDate = s => parseDate(s).toLocaleDateString("ko-KR",{
+ year:"numeric",month:"long",day:"numeric",weekday:"long"
+});
 
-let selectedDate = dateKey(today);
-let state = {};
-let dark = false;
-let elapsed = 0;
-let running = false;
-let interval = null;
-
+let data = {days:{},goals:[],dark:false};
 try {
-  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-  state = saved.days || {};
-  dark = !!saved.dark;
-} catch(e) {
-  state = {};
-}
-
-function saveAll() {
-  localStorage.setItem(STORAGE_KEY,JSON.stringify({
-    days:state,
-    dark:dark,
-    dday:dday
-  }));
-}
-
-let dday = null;
-try {
-  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-  dday = saved.dday || null;
+ const saved = JSON.parse(localStorage.getItem(KEY) || "null");
+ if(saved) data = {...data,...saved};
 } catch(e) {}
 
-function day() {
-  if(!state[selectedDate]) {
-    state[selectedDate] = {
-      tasks:[],
-      memo:"",
-      mood:"",
-      study:{}
-    };
-  }
-  const d = state[selectedDate];
-  if(!Array.isArray(d.tasks)) d.tasks = [];
-  if(!d.study) d.study = {};
-  return d;
+let selectedDate = keyDate(now);
+let activePage = "home";
+let filter = "all";
+let elapsed = 0;
+let running = false;
+let timerInterval = null;
+
+function getDay(date=selectedDate) {
+ if(!data.days[date]) {
+  data.days[date] = {tasks:[],study:{},mood:"",memo:""};
+ }
+ const d = data.days[date];
+ if(!Array.isArray(d.tasks)) d.tasks=[];
+ if(!d.study) d.study={};
+ return d;
+}
+function save() {
+ try {localStorage.setItem(KEY,JSON.stringify(data));}
+ catch(e) {alert("저장 공간이 부족합니다. 오래된 기록을 정리해 주세요.");}
+}
+function formatTime(sec) {
+ sec=Math.max(0,Math.floor(sec));
+ const h=Math.floor(sec/3600);
+ const m=Math.floor(sec%3600/60);
+ const s=sec%60;
+ return [h,m,s].map(n=>String(n).padStart(2,"0")).join(":");
+}
+function totalTime(study) {
+ return Object.values(study).reduce((a,b)=>a+(Number(b)||0),0);
 }
 
-function formatTime(seconds) {
-  const h = Math.floor(seconds/3600);
-  const m = Math.floor(seconds%3600/60);
-  const s = seconds%60;
-  return [h,m,s].map(v=>String(v).padStart(2,"0")).join(":");
+function showPage(name) {
+ activePage=name;
+ document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id==="page-"+name));
+ document.querySelectorAll("[data-page]").forEach(b=>b.classList.toggle("active",b.dataset.page===name));
+ $("pageTitle").textContent=pageInfo[name][0];
+ $("pageSub").textContent=pageInfo[name][1];
+ renderCurrent();
+ window.scrollTo({top:0,behavior:"smooth"});
 }
+document.querySelectorAll("[data-page]").forEach(b=>{
+ b.addEventListener("click",()=>showPage(b.dataset.page));
+});
+document.querySelectorAll("[data-go]").forEach(b=>{
+ b.addEventListener("click",()=>showPage(b.dataset.go));
+});
+
+function changeDate(date) {
+ if(!date) return;
+ if(running) pauseTimer();
+ selectedDate=date;
+ elapsed=0;
+ updateTimerDisplay();
+ renderAll();
+}
+$("datePicker").addEventListener("change",e=>changeDate(e.target.value));
+$("prevDate").addEventListener("click",()=>{
+ const d=parseDate(selectedDate);d.setDate(d.getDate()-1);changeDate(keyDate(d));
+});
+$("nextDate").addEventListener("click",()=>{
+ const d=parseDate(selectedDate);d.setDate(d.getDate()+1);changeDate(keyDate(d));
+});
 
 function renderHeader() {
-  $("todayLabel").textContent =
-    today.toLocaleDateString("ko-KR",{year:"numeric",month:"long",day:"numeric"});
+ $("todayPill").textContent=readableDate(selectedDate);
+ $("datePicker").value=selectedDate;
+ $("selectedDateText").textContent=readableDate(selectedDate);
+ $("heroDate").textContent=readableDate(selectedDate);
+ $("heroGreeting").textContent=selectedDate===keyDate(now)?"오늘도 차근차근!":"나의 공부 기록";
+}
 
-  $("datePicker").value = selectedDate;
-  $("dateCaption").textContent = prettyDate(selectedDate);
-
-  $("welcomeTitle").textContent =
-    selectedDate === dateKey(today)
-      ? "오늘도 차근차근!"
-      : prettyDate(selectedDate) + " 계획";
+function renderHome() {
+ const d=getDay();
+ const done=d.tasks.filter(t=>t.done).length;
+ const count=d.tasks.length;
+ const percent=count?Math.round(done/count*100):0;
+ $("homeTasks").textContent=`${done}/${count}`;
+ const total=totalTime(d.study);
+ $("homeTime").textContent=total>=3600?formatTime(total):Math.floor(total/60)+"분";
+ $("homeMood").textContent=d.mood||"-";
+ $("homePercent").textContent=percent+"%";
+ $("homeProgress").style.width=percent+"%";
+ $("homeProgressText").textContent=`${done} / ${count}`;
+ $("homeMemo").textContent=d.memo.trim()||"아직 작성된 메모가 없어요.";
 }
 
 function renderTasks() {
-  const tasks = day().tasks;
-  const list = $("taskList");
-  list.replaceChildren();
+ const tasks=getDay().tasks;
+ const list=$("taskList");
+ list.replaceChildren();
 
-  $("taskEmpty").hidden = tasks.length > 0;
+ const visible=tasks.map((task,index)=>({task,index})).filter(({task})=>{
+  if(filter==="todo") return !task.done;
+  if(filter==="done") return task.done;
+  return true;
+ });
+ $("taskEmpty").hidden=visible.length>0;
 
-  tasks.forEach((task,index) => {
-    const row = document.createElement("div");
-    row.className = "task" + (task.done ? " done" : "");
+ visible.forEach(({task,index})=>{
+  const row=document.createElement("div");
+  row.className="task"+(task.done?" done":"");
 
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.checked = !!task.done;
-    checkbox.addEventListener("change",() => {
-      task.done = checkbox.checked;
-      saveAll();
-      renderTasks();
-    });
-
-    const text = document.createElement("span");
-    text.className = "task-text";
-    text.textContent = task.text;
-
-    const actions = document.createElement("div");
-    actions.className = "task-actions";
-
-    const edit = document.createElement("button");
-    edit.textContent = "수정";
-    edit.addEventListener("click",() => {
-      const value = prompt("할 일을 수정하세요.",task.text);
-      if(value !== null && value.trim()) {
-        task.text = value.trim();
-        saveAll();
-        renderTasks();
-      }
-    });
-
-    const remove = document.createElement("button");
-    remove.textContent = "삭제";
-    remove.addEventListener("click",() => {
-      if(confirm("이 할 일을 삭제할까요?")) {
-        tasks.splice(index,1);
-        saveAll();
-        renderTasks();
-      }
-    });
-
-    actions.append(edit,remove);
-    row.append(checkbox,text,actions);
-    list.append(row);
+  const checkbox=document.createElement("input");
+  checkbox.type="checkbox";
+  checkbox.checked=!!task.done;
+  checkbox.setAttribute("aria-label","완료 여부");
+  checkbox.addEventListener("change",()=>{
+   task.done=checkbox.checked;save();renderTasks();renderHome();
   });
 
-  const completed = tasks.filter(t=>t.done).length;
-  const percent = tasks.length ? Math.round(completed/tasks.length*100) : 0;
+  const name=document.createElement("span");
+  name.className="task-name";
+  name.textContent=task.text;
 
-  $("taskCount").textContent = `${completed}/${tasks.length} 완료`;
-  $("progressText").textContent = `${percent}% · ${completed}/${tasks.length} 완료`;
-  $("progressBar").style.width = percent + "%";
+  const subject=document.createElement("span");
+  subject.className="task-subject";
+  subject.textContent=task.subject||"기타";
+
+  const actions=document.createElement("div");
+  actions.className="task-actions";
+
+  const edit=document.createElement("button");
+  edit.textContent="수정";
+  edit.addEventListener("click",()=>{
+   const value=prompt("공부 계획을 수정하세요.",task.text);
+   if(value!==null&&value.trim()){
+    task.text=value.trim();save();renderTasks();
+   }
+  });
+
+  const del=document.createElement("button");
+  del.textContent="삭제";
+  del.addEventListener("click",()=>{
+   if(confirm("이 계획을 삭제할까요?")){
+    tasks.splice(index,1);save();renderAll();
+   }
+  });
+
+  actions.append(edit,del);
+  row.append(checkbox,name,subject,actions);
+  list.append(row);
+ });
+
+ const done=tasks.filter(t=>t.done).length;
+ const pct=tasks.length?Math.round(done/tasks.length*100):0;
+ $("taskProgressText").textContent=`${pct}% · ${done}/${tasks.length} 완료`;
+ $("taskProgress").style.width=pct+"%";
 }
+
+$("taskForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const text=$("taskInput").value.trim();
+ if(!text)return;
+ getDay().tasks.push({text,subject:$("taskSubject").value,done:false});
+ $("taskInput").value="";
+ save();renderAll();
+});
+document.querySelectorAll("[data-filter]").forEach(b=>{
+ b.addEventListener("click",()=>{
+  filter=b.dataset.filter;
+  document.querySelectorAll("[data-filter]").forEach(x=>x.classList.toggle("active",x===b));
+  renderTasks();
+ });
+});
 
 function renderStudy() {
-  const records = day().study;
-  const box = $("studyRecords");
-  box.replaceChildren();
-
-  const subjects = Object.keys(records);
-  if(subjects.length === 0) {
-    const empty = document.createElement("span");
-    empty.className = "note";
-    empty.textContent = "아직 기록된 공부 시간이 없어요.";
-    box.append(empty);
-    return;
-  }
-
-  subjects.forEach(subject => {
-    const chip = document.createElement("span");
-    chip.className = "chip";
-    chip.textContent = `${subject} ${formatTime(records[subject])}`;
-    box.append(chip);
-  });
-
-  const total = Object.values(records).reduce((sum,n)=>sum+n,0);
-  const totalChip = document.createElement("span");
-  totalChip.className = "chip";
-  totalChip.textContent = `총합 ${formatTime(total)}`;
-  box.append(totalChip);
+ const study=getDay().study;
+ const box=$("subjectRecords");
+ box.replaceChildren();
+ $("studyDateLabel").textContent=readableDate(selectedDate);
+ subjects.forEach(subject=>{
+  const seconds=Number(study[subject])||0;
+  const row=document.createElement("div");
+  row.className="subject-record";
+  const name=document.createElement("span");
+  name.textContent=subject;
+  const time=document.createElement("strong");
+  time.textContent=formatTime(seconds);
+  row.append(name,time);
+  box.append(row);
+ });
+ $("totalStudyTime").textContent="총 공부 시간: "+formatTime(totalTime(study));
 }
+
+function updateTimerDisplay() {
+ $("timerDisplay").textContent=formatTime(elapsed);
+}
+function pauseTimer() {
+ running=false;
+ clearInterval(timerInterval);
+ timerInterval=null;
+ $("timerToggle").textContent="▶ 다시 시작";
+}
+$("timerToggle").addEventListener("click",()=>{
+ if(!running) {
+  running=true;
+  $("timerToggle").textContent="Ⅱ 일시정지";
+  timerInterval=setInterval(()=>{
+   elapsed++;
+   updateTimerDisplay();
+  },1000);
+ } else pauseTimer();
+});
+$("timerSave").addEventListener("click",()=>{
+ if(running) pauseTimer();
+ if(elapsed===0) {
+  alert("먼저 스톱워치를 실행해 주세요.");
+  return;
+ }
+ const subject=$("timerSubject").value;
+ const study=getDay().study;
+ study[subject]=(Number(study[subject])||0)+elapsed;
+ elapsed=0;
+ updateTimerDisplay();
+ save();renderStudy();renderHome();
+ alert("공부 시간이 저장되었습니다!");
+});
+$("timerReset").addEventListener("click",()=>{
+ if(running) pauseTimer();
+ if(elapsed>0&&!confirm("측정 중인 시간을 저장하지 않고 초기화할까요?"))return;
+ elapsed=0;
+ updateTimerDisplay();
+ $("timerToggle").textContent="▶ 시작";
+});
 
 function renderMood() {
-  const mood = day().mood;
-  document.querySelectorAll(".mood").forEach(button => {
-    button.classList.toggle("active",button.dataset.mood === mood);
-  });
-
-  const messages = {
-    "😫":"오늘은 조금 쉬어가도 괜찮아요.",
-    "😕":"아쉬운 부분은 내일 다시 도전해 봐요.",
-    "😐":"평범한 하루도 충분히 의미 있어요.",
-    "🙂":"좋은 흐름이에요! 계속 이어가 봐요.",
-    "🤩":"최고의 컨디션이네요! 멋져요."
-  };
-
-  $("moodMessage").textContent =
-    messages[mood] || "오늘의 컨디션을 선택해 보세요.";
+ const mood=getDay().mood;
+ document.querySelectorAll(".mood").forEach(b=>{
+  b.classList.toggle("active",b.dataset.mood===mood);
+ });
+ $("moodDescription").textContent=moodText[mood]||"오늘의 컨디션을 선택해 주세요.";
 }
+document.querySelectorAll(".mood").forEach(b=>{
+ b.addEventListener("click",()=>{
+  getDay().mood=b.dataset.mood;
+  save();renderMood();renderHome();
+ });
+});
 
+$("memo").addEventListener("input",()=>{
+ getDay().memo=$("memo").value;
+ save();
+ $("memoStatus").textContent="저장됨 ✓";
+ renderHome();
+});
 function renderMemo() {
-  $("memo").value = day().memo || "";
+ $("memo").value=getDay().memo||"";
+ $("memoStatus").textContent="자동 저장";
 }
 
-function renderDday() {
-  if(!dday) {
-    $("ddayResult").hidden = true;
-    return;
-  }
+function renderGoals() {
+ const list=$("ddayList");
+ list.replaceChildren();
+ $("ddayEmpty").hidden=data.goals.length>0;
+ data.goals.forEach((goal,index)=>{
+  const target=parseDate(goal.date);
+  const diff=Math.round((target-now)/86400000);
+  let label=diff>0?"D-"+diff:diff===0?"D-DAY":"D+"+Math.abs(diff);
 
-  $("ddayResult").hidden = false;
-  $("ddayDetail").textContent = dday.name + " · " + dday.date;
-
-  const target = parseDate(dday.date);
-  const diff = Math.round((target-today)/86400000);
-
-  if(diff > 0) $("ddayNumber").textContent = "D-" + diff;
-  else if(diff === 0) $("ddayNumber").textContent = "D-DAY";
-  else $("ddayNumber").textContent = "D+" + Math.abs(diff);
-}
-
-function renderAll() {
-  renderHeader();
-  renderTasks();
-  renderStudy();
-  renderMood();
-  renderMemo();
-  renderDday();
-}
-
-function changeDate(newDate) {
-  if(!newDate) return;
-
-  if(running) {
-    running = false;
-    clearInterval(interval);
-    interval = null;
-    $("timerToggle").textContent = "시작";
-  }
-
-  selectedDate = newDate;
-  elapsed = 0;
-  $("timerDisplay").textContent = formatTime(elapsed);
-  renderAll();
-}
-
-$("datePicker").addEventListener("change",e=>changeDate(e.target.value));
-
-$("prevDay").addEventListener("click",() => {
-  const d = parseDate(selectedDate);
-  d.setDate(d.getDate()-1);
-  changeDate(dateKey(d));
-});
-
-$("nextDay").addEventListener("click",() => {
-  const d = parseDate(selectedDate);
-  d.setDate(d.getDate()+1);
-  changeDate(dateKey(d));
-});
-
-$("todayBtn").addEventListener("click",() => changeDate(dateKey(today)));
-
-$("taskForm").addEventListener("submit",e => {
-  e.preventDefault();
-  const value = $("taskInput").value.trim();
-  if(!value) return;
-
-  day().tasks.push({text:value,done:false});
-  $("taskInput").value = "";
-  saveAll();
-  renderTasks();
-});
-
-$("memo").addEventListener("input",() => {
-  day().memo = $("memo").value;
-  saveAll();
-});
-
-document.querySelectorAll(".mood").forEach(button => {
-  button.addEventListener("click",() => {
-    day().mood = button.dataset.mood;
-    saveAll();
-    renderMood();
+  const row=document.createElement("div");
+  row.className="dday-item";
+  const count=document.createElement("div");
+  count.className="dday-count";
+  count.textContent=label;
+  const info=document.createElement("div");
+  info.className="dday-info";
+  const title=document.createElement("strong");
+  title.textContent=goal.name;
+  const date=document.createElement("small");
+  date.textContent=goal.date;
+  info.append(title,date);
+  const del=document.createElement("button");
+  del.className="icon-btn";
+  del.textContent="삭제";
+  del.addEventListener("click",()=>{
+   if(confirm("이 목표를 삭제할까요?")){
+    data.goals.splice(index,1);save();renderGoals();
+   }
   });
-});
-
-$("ddayForm").addEventListener("submit",e => {
-  e.preventDefault();
-  dday = {
-    name:$("ddayName").value.trim(),
-    date:$("ddayDate").value
-  };
-  saveAll();
-  renderDday();
-});
-
-$("ddayDelete").addEventListener("click",() => {
-  if(confirm("D-day 목표를 삭제할까요?")) {
-    dday = null;
-    saveAll();
-    renderDday();
-  }
-});
-
-function updateTimer() {
-  $("timerDisplay").textContent = formatTime(elapsed);
+  row.append(count,info,del);
+  list.append(row);
+ });
 }
-
-$("timerToggle").addEventListener("click",() => {
-  if(!running) {
-    running = true;
-    $("timerToggle").textContent = "일시정지";
-    interval = setInterval(() => {
-      elapsed++;
-      updateTimer();
-    },1000);
-  } else {
-    running = false;
-    clearInterval(interval);
-    interval = null;
-    $("timerToggle").textContent = "다시 시작";
-  }
+$("ddayForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const name=$("ddayName").value.trim();
+ const date=$("ddayDate").value;
+ if(!name||!date)return;
+ data.goals.push({name,date});
+ $("ddayName").value="";
+ $("ddayDate").value="";
+ save();renderGoals();
 });
 
-$("timerSave").addEventListener("click",() => {
-  if(running) {
-    running = false;
-    clearInterval(interval);
-    interval = null;
-    $("timerToggle").textContent = "시작";
-  }
-
-  if(elapsed <= 0) {
-    alert("먼저 스톱워치를 실행해 주세요.");
-    return;
-  }
-
-  const subject = $("subject").value;
-  const records = day().study;
-  records[subject] = (records[subject] || 0) + elapsed;
-
-  elapsed = 0;
-  updateTimer();
-  saveAll();
-  renderStudy();
-  alert("공부 시간이 저장되었습니다!");
-});
-
-$("timerReset").addEventListener("click",() => {
-  if(running) {
-    running = false;
-    clearInterval(interval);
-    interval = null;
-  }
-  elapsed = 0;
-  updateTimer();
-  $("timerToggle").textContent = "시작";
-});
-
-$("themeBtn").addEventListener("click",() => {
-  dark = !dark;
-  applyTheme();
-  saveAll();
-});
-
+function renderCurrent() {
+ if(activePage==="home")renderHome();
+ if(activePage==="check")renderTasks();
+ if(activePage==="timer")renderStudy();
+ if(activePage==="condition"){renderMood();renderMemo();}
+ if(activePage==="goals")renderGoals();
+}
+function renderAll() {
+ renderHeader();
+ renderHome();
+ renderTasks();
+ renderStudy();
+ renderMood();
+ renderMemo();
+ renderGoals();
+}
 function applyTheme() {
-  document.body.classList.toggle("dark",dark);
-  $("themeBtn").textContent = dark ? "☀" : "☾";
+ document.body.classList.toggle("dark",!!data.dark);
+ $("themeButton").textContent=data.dark?"☀　라이트 모드":"☾　다크 모드";
 }
+$("themeButton").addEventListener("click",()=>{
+ data.dark=!data.dark;applyTheme();save();
+});
 
 applyTheme();
 renderAll();
-updateTimer();
+updateTimerDisplay();
 </script>
 </body>
 </html>
-
