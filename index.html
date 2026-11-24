@@ -4,647 +4,557 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MY STUDY PLANNER</title>
+<title>공부특별시 - 나의 공부공간</title>
 <style>
-:root {
-  --main:#5479e8;
-  --bg:#f4f6fb;
-  --card:#fff;
-  --text:#20283a;
-  --muted:#8992a5;
-  --line:#e9edf4;
-  --green:#24a66a;
-}
-* {box-sizing:border-box}
-body {
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Arial,"Apple SD Gothic Neo",sans-serif;
-}
-button,input,textarea,select {font:inherit}
-button {cursor:pointer}
-header {
-  background:white;
-  padding:20px max(18px,calc((100% - 1000px)/2));
-  border-bottom:1px solid var(--line);
-  position:sticky;top:0;z-index:5;
-}
-.header-inner {
-  max-width:1000px;margin:auto;
-  display:flex;justify-content:space-between;
-  align-items:center;gap:10px;
-}
-.logo {font-weight:900;font-size:20px;color:var(--main)}
-.today {font-size:13px;color:var(--muted)}
-main {max-width:1000px;margin:25px auto;padding:0 16px 100px}
-nav {
-  display:flex;gap:7px;overflow-x:auto;
-  padding:5px 0 15px;
-  scrollbar-width:none;
-}
-nav button {
-  flex-shrink:0;border:0;background:white;
-  padding:12px 16px;border-radius:12px;
-  color:#657087;font-weight:700;
-}
-nav button.active {background:var(--main);color:white}
-.page {display:none}
-.page.active {display:block}
-.card {
-  background:var(--card);border-radius:18px;
-  padding:20px;margin-bottom:15px;
-  box-shadow:0 3px 15px #263b6710;
-}
-h2 {font-size:20px;margin:0 0 17px}
-h3 {font-size:16px;margin:0 0 12px}
-p {line-height:1.6}
-.muted {color:var(--muted);font-size:13px}
-input,textarea,select {
-  border:1px solid var(--line);border-radius:10px;
-  padding:12px;background:white;color:var(--text);
-  width:100%;outline:none;
-}
-input:focus,textarea:focus,select:focus {border-color:var(--main)}
-textarea {resize:vertical;min-height:85px}
-.btn {
-  border:0;background:var(--main);color:white;
-  padding:12px 17px;border-radius:10px;font-weight:700;
-}
-.btn.light {background:#edf1ff;color:var(--main)}
-.btn.green {background:var(--green)}
-.btn.red {background:#fff0f0;color:#df5353}
-.btn.gray {background:#edf0f5;color:#657087}
-.row {display:flex;gap:9px;align-items:center}
-.row > * {min-width:0}
-.row input {flex:1}
-.grid2 {display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat {
-  background:#f5f7ff;padding:17px;border-radius:14px;
-}
-.stat strong {display:block;font-size:25px;color:var(--main);margin-top:8px}
-.task {
-  display:flex;align-items:center;gap:11px;
-  padding:13px 0;border-bottom:1px solid var(--line);
-}
-.task:last-child {border:0}
-.task input[type=checkbox] {width:21px;height:21px;accent-color:var(--green)}
-.task .task-name {flex:1;overflow-wrap:anywhere}
-.task.done .task-name {text-decoration:line-through;color:#a5adbb}
-.delete {border:0;background:none;color:#c0c5cf;font-size:20px}
-.calendar {
-  display:grid;grid-template-columns:repeat(7,1fr);
-  gap:6px;text-align:center;
-}
-.calendar .weekday {font-size:12px;color:var(--muted);padding:9px 0}
-.day {
-  min-height:64px;border-radius:12px;background:#f6f7fb;
-  border:1px solid transparent;display:flex;
-  flex-direction:column;align-items:center;
-  justify-content:center;gap:3px;cursor:pointer;
-  font-size:14px;
-}
-.day.selected {border:2px solid var(--main);background:#eef2ff}
-.day.success {background:#e8f8ef}
-.day .stamp {font-size:20px}
-.day.empty {background:transparent;cursor:default}
-.timer {
-  font-size:48px;font-weight:900;text-align:center;
-  letter-spacing:2px;padding:25px 0;color:var(--main);
-  font-variant-numeric:tabular-nums;
-}
-.progress {
-  height:10px;background:#edf0f5;border-radius:20px;overflow:hidden;
-}
-.progress > div {height:100%;background:var(--green);width:0;transition:.2s}
-.success-hero {
-  text-align:center;padding:28px 15px;
-  background:#effaf3;border-radius:16px;
-}
-.success-hero .emoji {font-size:58px}
-.success-hero h2 {color:#188653;margin-top:10px}
-footer {text-align:center;color:#aab0bd;font-size:12px;padding:20px}
-@media(max-width:600px) {
-  main {margin-top:15px;padding:0 12px 90px}
-  header {padding:16px}
-  .card {padding:16px;border-radius:15px}
-  nav button {padding:11px 13px;font-size:13px}
-  .grid2 {gap:8px}
-  .day {min-height:49px;font-size:12px}
-  .day .stamp {font-size:17px}
-  .timer {font-size:39px}
-}
+*{box-sizing:border-box}
+:root{--bg:#f5f7fb;--card:#fff;--text:#202b40;--muted:#8792a5;--blue:#5578f5;--line:#edf0f5}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",sans-serif}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0}
+header{background:#fff;padding:19px 22px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+.logo{font-size:21px;font-weight:900;color:var(--blue)}
+.date{font-size:12px;color:var(--muted)}
+main{max-width:900px;margin:auto;padding:20px 16px 110px}
+.page{display:none}.page.active{display:block}
+h2{font-size:23px;margin:8px 0 18px}
+h3{font-size:16px;margin:0 0 14px}
+.card{background:var(--card);border-radius:19px;padding:19px;margin-bottom:15px;box-shadow:0 3px 15px #263b5b08}
+.hero{background:linear-gradient(135deg,#5278f5,#8298ff);color:white;padding:25px;border-radius:22px;margin-bottom:16px}
+.hero small{opacity:.85}.hero strong{display:block;font-size:39px;margin:12px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat{background:#f7f8fc;border-radius:14px;padding:15px}
+.stat b{display:block;font-size:23px;margin-top:7px}
+.muted{color:var(--muted);font-size:13px}
+input,textarea,select{width:100%;padding:12px;border:1px solid var(--line);border-radius:11px;background:#fafbfe;outline:none;margin:5px 0 10px;color:var(--text)}
+textarea{resize:vertical;min-height:65px}
+.primary{background:var(--blue);color:white;padding:12px 18px;border-radius:11px;font-weight:700}
+.secondary{background:#edf1ff;color:var(--blue);padding:10px 14px;border-radius:10px;font-weight:700}
+.danger{background:#fff0f0;color:#e05c5c;padding:9px 12px;border-radius:9px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.row>*{min-width:0}
+.timer{text-align:center;padding:20px 0}
+.timer .time{font-size:54px;font-weight:800;letter-spacing:-2px;margin:20px 0}
+.subjects{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.subject{padding:10px 14px;background:#f0f2f8;border-radius:20px}
+.subject.selected{background:#e8edff;color:var(--blue);font-weight:bold}
+.progress{height:10px;background:#edf0f6;border-radius:20px;overflow:hidden;margin:12px 0}
+.progress div{height:100%;background:var(--blue);border-radius:20px}
+.item{padding:13px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border:0}
+.item input[type=checkbox]{width:18px;margin:0 10px 0 0}
+.item label{display:flex;align-items:center;flex:1}
+.item.done span{text-decoration:line-through;color:#aab2c0}
+.bottom{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;z-index:10;padding:8px 3px calc(8px + env(safe-area-inset-bottom))}
+.nav{width:100%;max-width:700px;display:flex;justify-content:space-around}
+.nav button{background:none;color:#929bad;font-size:11px;padding:7px 3px;display:flex;flex-direction:column;gap:4px;align-items:center}
+.nav button span{font-size:20px}
+.nav button.active{color:var(--blue);font-weight:bold}
+.music-player{background:linear-gradient(135deg,#26385d,#4968a8);color:white;border-radius:18px;padding:20px}
+.music-player .song{font-size:18px;font-weight:bold;margin:12px 0}
+.music-player button{background:#ffffff22;color:white;border-radius:50%;width:42px;height:42px;font-size:18px}
+.music-player input{accent-color:white}
+.songrow{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.songrow .songname{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.songrow button{padding:8px;border-radius:8px;background:#edf1ff;color:var(--blue)}
+.bar{height:100px;display:flex;align-items:end;gap:8px}
+.bar div{flex:1;background:#8299ff;border-radius:5px 5px 0 0;min-height:3px}
+@media(min-width:650px){.grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="header-inner">
-    <div class="logo">✦ MY STUDY PLANNER</div>
-    <div class="today" id="todayText"></div>
-  </div>
+ <div class="logo">📘 공부특별시</div>
+ <div class="date" id="today"></div>
 </header>
 
 <main>
-  <nav id="nav">
-    <button class="active" data-page="home">오늘의 계획</button>
-    <button data-page="timerPage">공부 스톱워치</button>
-    <button data-page="checkPage">체크리스트</button>
-    <button data-page="statsPage">학습 통계</button>
-    <button data-page="successPage">🏆 성공 기록</button>
-  </nav>
+<!-- 홈 -->
+<section class="page active" id="home">
+ <div class="hero">
+  <small>오늘도 목표를 향해 한 걸음!</small>
+  <strong id="homeTime">00:00:00</strong>
+  <span>오늘의 누적 공부 시간</span>
+  <div class="progress"><div id="homeProgress"></div></div>
+  <small id="goalText">목표까지 남은 시간 계산 중</small>
+ </div>
+ <div class="grid">
+  <div class="stat"><span class="muted">오늘 공부 과목</span><b id="subjectCount">0개</b></div>
+  <div class="stat"><span class="muted">완료한 할 일</span><b id="taskCount">0개</b></div>
+  <div class="stat"><span class="muted">하루 목표</span><b id="goalHour">4시간</b></div>
+  <div class="stat"><span class="muted">목표 달성률</span><b id="goalPercent">0%</b></div>
+ </div>
+ <div class="card">
+  <h3>📅 오늘의 공부 계획</h3>
+  <div id="homePlans" class="muted">아직 등록된 계획이 없어.</div>
+ </div>
+ <div class="card">
+  <h3>✅ 오늘의 체크리스트</h3>
+  <div id="homeTasks" class="muted">할 일을 추가해 봐!</div>
+ </div>
+</section>
 
-  <!-- 오늘의 계획 -->
-  <section class="page active" id="home">
-    <div class="card">
-      <h2>📅 날짜별 학습 계획</h2>
-      <input type="date" id="datePicker">
-      <p class="muted">날짜를 변경하면 해당 날짜의 계획을 확인하고 수정할 수 있어.</p>
-    </div>
+<!-- 타이머 -->
+<section class="page" id="timer">
+ <h2>⏱ 공부 타이머</h2>
+ <div class="card timer">
+  <div class="muted">현재 공부 과목</div>
+  <h3 id="currentSubject">국어</h3>
+  <div class="time" id="timerDisplay">00:00:00</div>
+  <div class="subjects" id="subjects"></div>
+  <button class="primary" id="startBtn" onclick="toggleTimer()">공부 시작</button>
+  <button class="secondary" onclick="resetTimer()">초기화</button>
+  <p class="muted">시작 버튼을 누르면 공부 시간이 기록돼.</p>
+ </div>
+ <div class="card">
+  <h3>오늘 과목별 공부 시간</h3>
+  <div id="subjectStats"></div>
+ </div>
+</section>
 
-    <div class="card">
-      <h2>🎯 오늘의 목표</h2>
-      <textarea id="goal" placeholder="오늘 꼭 달성하고 싶은 목표를 작성해 봐."></textarea>
-      <p class="muted">입력한 목표는 자동으로 저장돼.</p>
-    </div>
+<!-- 플래너 -->
+<section class="page" id="planner">
+ <h2>📅 공부 플래너</h2>
+ <div class="card">
+  <h3>날짜 선택</h3>
+  <input type="date" id="planDate">
+  <h3>새로운 계획 작성</h3>
+  <input id="planTitle" placeholder="예: 수학 3단원 공부하기">
+  <textarea id="planMemo" placeholder="세부 내용이나 메모"></textarea>
+  <button class="primary" onclick="addPlan()">계획 추가</button>
+ </div>
+ <div class="card">
+  <h3>선택한 날짜의 계획</h3>
+  <div id="planList"></div>
+ </div>
+</section>
 
-    <div class="card">
-      <h2>📚 공부 계획</h2>
-      <div class="row">
-        <input id="planInput" placeholder="예: 수학 문제집 20페이지">
-        <button class="btn" onclick="addPlan()">추가</button>
-      </div>
-      <div id="planList"></div>
-    </div>
+<!-- 체크리스트 -->
+<section class="page" id="check">
+ <h2>✅ 체크리스트</h2>
+ <div class="card">
+  <h3>할 일 추가</h3>
+  <input id="taskInput" placeholder="오늘 해야 할 공부">
+  <button class="primary" onclick="addTask()">추가하기</button>
+ </div>
+ <div class="card">
+  <h3>오늘의 할 일</h3>
+  <div id="taskList"></div>
+ </div>
+</section>
 
-    <div class="card">
-      <h2>📊 오늘의 진행 상황</h2>
-      <div class="row" style="justify-content:space-between;margin-bottom:10px">
-        <span class="muted">체크리스트 완료율</span>
-        <strong id="progressText">0%</strong>
-      </div>
-      <div class="progress"><div id="progressBar"></div></div>
-      <p class="muted" id="progressDetail">0 / 0 완료</p>
-      <button class="btn green" style="width:100%;margin-top:12px" onclick="goPage('checkPage')">
-        체크리스트 확인하기 →
-      </button>
-    </div>
-  </section>
+<!-- 음악 -->
+<section class="page" id="music">
+ <h2>🎵 나만의 음악실</h2>
+ <div class="card">
+  <h3>음악 파일 추가</h3>
+  <p class="muted">휴대폰이나 컴퓨터에 저장된 음악을 선택해 줘.</p>
+  <input type="file" id="musicFiles" accept="audio/*" multiple>
+  <p class="muted">추가한 음악은 이 브라우저에 저장돼. 브라우저 데이터를 삭제하면 음악도 삭제될 수 있어.</p>
+ </div>
+ <div class="music-player">
+  <div style="font-size:35px">🎧</div>
+  <div class="muted" style="color:#dce5ff">NOW PLAYING</div>
+  <div class="song" id="songTitle">음악을 선택해 줘</div>
+  <div class="muted" id="songTime" style="color:#dce5ff">00:00 / 00:00</div>
+  <input type="range" id="seek" min="0" max="100" value="0" style="width:100%">
+  <div class="row" style="justify-content:center;gap:18px;margin-top:10px">
+   <button onclick="prevSong()">◀|</button>
+   <button onclick="toggleMusic()" id="musicPlay" style="width:54px;height:54px">▶</button>
+   <button onclick="nextSong()">|▶</button>
+   <button onclick="toggleRepeat()" id="repeatBtn">🔁</button>
+  </div>
+  <audio id="audio"></audio>
+ </div>
+ <div class="card">
+  <div class="row">
+   <h3>내 음악 목록</h3>
+   <span class="muted" id="songCount">0곡</span>
+  </div>
+  <div id="songList" class="muted">아직 추가한 음악이 없어.</div>
+ </div>
+</section>
 
-  <!-- 스톱워치 -->
-  <section class="page" id="timerPage">
-    <div class="card">
-      <h2>⏱ 과목별 공부 스톱워치</h2>
-      <p class="muted">공부할 과목을 선택하고 시작해 봐.</p>
-      <select id="subject">
-        <option>국어</option>
-        <option>수학</option>
-        <option>영어</option>
-        <option>사회</option>
-        <option>역사</option>
-        <option>과학</option>
-        <option>기타</option>
-      </select>
-      <div class="timer" id="timerDisplay">00:00:00</div>
-      <div class="row" style="justify-content:center;flex-wrap:wrap">
-        <button class="btn green" id="startBtn" onclick="startTimer()">▶ 시작</button>
-        <button class="btn gray" onclick="pauseTimer()">Ⅱ 일시정지</button>
-        <button class="btn red" onclick="resetTimer()">초기화</button>
-      </div>
-    </div>
-    <div class="card">
-      <h3>📖 과목별 누적 공부 시간</h3>
-      <div id="subjectStats"></div>
-    </div>
-  </section>
+<!-- 통계 -->
+<section class="page" id="stats">
+ <h2>📊 공부 통계</h2>
+ <div class="card">
+  <h3>최근 7일 공부 시간</h3>
+  <div class="bar" id="weekChart"></div>
+  <div class="row muted" id="weekLabels"></div>
+ </div>
+ <div class="grid">
+  <div class="stat"><span class="muted">이번 주 공부 시간</span><b id="weekTotal">0시간</b></div>
+  <div class="stat"><span class="muted">오늘 공부 시간</span><b id="todayTotal">0분</b></div>
+ </div>
+ <div class="card">
+  <h3>과목별 누적 공부 시간</h3>
+  <div id="allStats"></div>
+ </div>
+</section>
 
-  <!-- 체크리스트 -->
-  <section class="page" id="checkPage">
-    <div class="card">
-      <h2>☑ 공부 체크리스트</h2>
-      <p class="muted">선택한 날짜의 할 일을 관리할 수 있어.</p>
-      <div class="row">
-        <input id="taskInput" placeholder="새로운 공부 할 일 입력">
-        <button class="btn" onclick="addTask()">추가</button>
-      </div>
-      <div id="taskList"></div>
-    </div>
-    <div class="card">
-      <h3>진행 상황</h3>
-      <div class="progress"><div id="checkProgress"></div></div>
-      <p class="muted" id="checkCount">0개 완료</p>
-    </div>
-  </section>
-
-  <!-- 통계 -->
-  <section class="page" id="statsPage">
-    <div class="card">
-      <h2>📈 나의 학습 통계</h2>
-      <div class="grid2">
-        <div class="stat">
-          <span class="muted">누적 공부 시간</span>
-          <strong id="totalTime">0분</strong>
-        </div>
-        <div class="stat">
-          <span class="muted">성공한 날짜</span>
-          <strong id="totalSuccess">0일</strong>
-        </div>
-        <div class="stat">
-          <span class="muted">완료한 체크리스트</span>
-          <strong id="totalTasks">0개</strong>
-        </div>
-        <div class="stat">
-          <span class="muted">오늘 공부 시간</span>
-          <strong id="todayTime">0분</strong>
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <h3>과목별 누적 시간</h3>
-      <div id="statsSubjects"></div>
-    </div>
-  </section>
-
-  <!-- 성공 기록 : 마지막 탭 -->
-  <section class="page" id="successPage">
-    <div class="card">
-      <div class="success-hero">
-        <div class="emoji">🏆</div>
-        <h2>나의 성공 기록</h2>
-        <p>매일의 노력이 모여 멋진 결과가 돼!</p>
-        <strong id="successCount" style="font-size:27px;color:#188653">0일 성공</strong>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="row" style="justify-content:space-between;margin-bottom:18px">
-        <button class="btn light" onclick="changeMonth(-1)">〈</button>
-        <h2 id="calendarTitle" style="margin:0">2026년 11월</h2>
-        <button class="btn light" onclick="changeMonth(1)">〉</button>
-      </div>
-      <div class="calendar" id="calendar"></div>
-      <p class="muted" style="text-align:center;margin-top:17px">
-        🏅 성공한 날짜에는 스탬프가 표시돼.
-      </p>
-    </div>
-
-    <div class="card">
-      <h2>🌟 오늘의 성공 판정</h2>
-      <p class="muted">선택한 날짜의 체크리스트를 모두 완료하면 성공할 수 있어.</p>
-      <div id="successStatus" class="success-hero" style="background:#f5f7fb">
-        <div class="emoji">📖</div>
-        <h3>아직 성공하지 않았어!</h3>
-        <p class="muted">오늘의 공부를 완료해 보자.</p>
-      </div>
-      <button class="btn green" id="successBtn" style="width:100%;margin-top:15px" onclick="markSuccess()">
-        🏆 오늘 하루 성공하기
-      </button>
-      <button class="btn light" style="width:100%;margin-top:9px" onclick="adminSuccess()">
-        관리자 성공 처리
-      </button>
-    </div>
-    <div class="card">
-      <h3>📜 성공한 날짜 목록</h3>
-      <div id="successHistory" class="muted">아직 기록이 없어.</div>
-    </div>
-  </section>
-
-  <footer>MY STUDY PLANNER · 나만의 공부 기록</footer>
+<!-- 설정 -->
+<section class="page" id="settings">
+ <h2>⚙️ 설정</h2>
+ <div class="card">
+  <h3>하루 공부 목표</h3>
+  <label class="muted">목표 시간 (시간)</label>
+  <input type="number" id="goalInput" min="1" max="24" value="4">
+  <button class="primary" onclick="saveGoal()">목표 저장</button>
+ </div>
+ <div class="card">
+  <h3>과목 관리</h3>
+  <input id="newSubject" placeholder="과목 이름">
+  <button class="primary" onclick="addSubject()">과목 추가</button>
+  <div id="subjectManage" style="margin-top:12px"></div>
+ </div>
+ <div class="card">
+  <h3>데이터 관리</h3>
+  <p class="muted">공부 기록과 플래너를 초기화할 수 있어. 음악 파일도 별도로 삭제할 수 있어.</p>
+  <button class="danger" onclick="clearData()">공부 데이터 초기화</button>
+ </div>
+</section>
 </main>
 
+<nav class="bottom">
+ <div class="nav">
+  <button class="active" onclick="showPage('home',this)"><span>🏠</span>홈</button>
+  <button onclick="showPage('timer',this)"><span>⏱</span>타이머</button>
+  <button onclick="showPage('planner',this)"><span>📅</span>플래너</button>
+  <button onclick="showPage('check',this)"><span>✅</span>체크리스트</button>
+  <button onclick="showPage('music',this)"><span>🎵</span>음악</button>
+  <button onclick="showPage('stats',this)"><span>📊</span>통계</button>
+  <button onclick="showPage('settings',this)"><span>⚙️</span>설정</button>
+ </div>
+</nav>
+
 <script>
-const KEY = "myStudyPlanner_v3";
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toLocaleDateString('sv-SE');
+const fmt=s=>{
+ s=Math.max(0,Math.floor(s||0));
+ return [Math.floor(s/3600),Math.floor(s%3600/60),s%60]
+ .map(x=>String(x).padStart(2,'0')).join(':');
+};
+const minutes=s=>Math.floor(s/60);
+const escapeHTML=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-let data = JSON.parse(localStorage.getItem(KEY) || "{}");
-data.days ||= {};
-data.study ||= {};
-data.success ||= {};
+let data=JSON.parse(localStorage.getItem('studyCityData')||'null')||{
+ goal:4,
+ subjects:['국어','영어','수학','과학','사회','역사'],
+ records:{},plans:{},tasks:{}
+};
+let selected='국어',running=false,elapsed=0,lastTick=0;
+let tick=null;
 
-let selectedDate = localDate();
-let calendarDate = new Date();
-let timerSeconds = 0;
-let timerRunning = false;
-let timerInterval = null;
-let timerSubject = "국어";
-
-function localDate(d=new Date()) {
-  const y=d.getFullYear();
-  const m=String(d.getMonth()+1).padStart(2,"0");
-  const day=String(d.getDate()).padStart(2,"0");
-  return `${y}-${m}-${day}`;
+function save(){
+ localStorage.setItem('studyCityData',JSON.stringify(data));
+}
+function dayRecord(d=today()){
+ return data.records[d]||(data.records[d]={});
+}
+function dayTotal(d=today()){
+ return Object.values(data.records[d]||{}).reduce((a,b)=>a+b,0);
+}
+function showPage(id,btn){
+ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+ $(id).classList.add('active');
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+ if(btn)btn.classList.add('active');
+ render();
+}
+function render(){
+ $('today').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+ renderHome();renderSubjects();renderPlans();renderTasks();renderStats();renderSettings();
+}
+function renderHome(){
+ let total=dayTotal(),goal=data.goal*3600;
+ $('homeTime').textContent=fmt(total);
+ $('homeProgress').style.width=Math.min(100,total/goal*100)+'%';
+ $('goalText').textContent=total>=goal?'🎉 오늘 목표 달성!':`목표까지 ${fmt(goal-total)} 남았어`;
+ $('subjectCount').textContent=Object.keys(data.records[today()]||{}).length+'개';
+ $('taskCount').textContent=(data.tasks[today()]||[]).filter(t=>t.done).length+'개';
+ $('goalHour').textContent=data.goal+'시간';
+ $('goalPercent').textContent=Math.floor(total/goal*100)+'%';
+ let plans=data.plans[today()]||[];
+ $('homePlans').innerHTML=plans.length?plans.map(p=>`<div class="item">📘 ${escapeHTML(p.title)}</div>`).join(''):'아직 계획이 없어.';
+ let tasks=data.tasks[today()]||[];
+ $('homeTasks').innerHTML=tasks.length?tasks.map(t=>`<div class="item ${t.done?'done':''}">${t.done?'☑':'□'} ${escapeHTML(t.title)}</div>`).join(''):'할 일을 추가해 봐!';
+}
+function renderSubjects(){
+ $('subjects').innerHTML=data.subjects.map(s=>`<button class="subject ${s===selected?'selected':''}" onclick="chooseSubject('${escapeHTML(s)}')">${escapeHTML(s)}</button>`).join('');
+ $('currentSubject').textContent=selected;
+ let r=dayRecord();
+ $('subjectStats').innerHTML=data.subjects.map(s=>`<div class="item row"><span>${escapeHTML(s)}</span><b>${fmt(r[s]||0)}</b></div>`).join('');
+}
+function chooseSubject(s){
+ if(running){alert('타이머를 먼저 멈춰 줘.');return;}
+ selected=s;renderSubjects();
+}
+function toggleTimer(){
+ if(!running){
+  running=true;lastTick=Date.now();
+  $('startBtn').textContent='공부 종료';
+  tick=setInterval(()=>{
+   let now=Date.now();
+   let seconds=Math.floor((now-lastTick)/1000);
+   if(seconds>0){
+    dayRecord()[selected]=(dayRecord()[selected]||0)+seconds;
+    elapsed+=seconds;lastTick+=seconds*1000;
+    save();$('timerDisplay').textContent=fmt(elapsed);
+    renderHome();renderStats();
+    $('subjectStats').innerHTML=data.subjects.map(s=>`<div class="item row"><span>${escapeHTML(s)}</span><b>${fmt(dayRecord()[s]||0)}</b></div>`).join('');
+   }
+  },500);
+ }else{
+  running=false;clearInterval(tick);
+  $('startBtn').textContent='공부 시작';
+  elapsed=0;$('timerDisplay').textContent='00:00:00';
+  save();render();
+ }
+}
+function resetTimer(){
+ if(running){alert('먼저 공부를 종료해 줘.');return;}
+ elapsed=0;$('timerDisplay').textContent=fmt(0);
+}
+function addPlan(){
+ let d=$('planDate').value,title=$('planTitle').value.trim();
+ if(!d||!title)return alert('날짜와 계획을 입력해 줘.');
+ if(!data.plans[d])data.plans[d]=[];
+ data.plans[d].push({id:Date.now(),title,memo:$('planMemo').value});
+ $('planTitle').value='';$('planMemo').value='';
+ save();renderPlans();renderHome();
+}
+function renderPlans(){
+ if(!$('planDate').value)$('planDate').value=today();
+ let d=$('planDate').value,plans=data.plans[d]||[];
+ $('planList').innerHTML=plans.length?plans.map(p=>`
+ <div class="item">
+  <b>${escapeHTML(p.title)}</b>
+  <p class="muted">${escapeHTML(p.memo||'')}</p>
+  <button class="secondary" onclick="editPlan('${d}',${p.id})">수정</button>
+  <button class="danger" onclick="deletePlan('${d}',${p.id})">삭제</button>
+ </div>`).join(''):'계획이 없어.';
+}
+function editPlan(d,id){
+ let p=(data.plans[d]||[]).find(x=>x.id===id);
+ if(!p)return;
+ let title=prompt('계획 수정',p.title);
+ if(title===null)return;
+ p.title=title.trim()||p.title;
+ p.memo=prompt('메모 수정',p.memo)||p.memo;
+ save();render();
+}
+function deletePlan(d,id){
+ if(!confirm('삭제할까?'))return;
+ data.plans[d]=data.plans[d].filter(x=>x.id!==id);
+ save();render();
+}
+function addTask(){
+ let title=$('taskInput').value.trim();
+ if(!title)return;
+ if(!data.tasks[today()])data.tasks[today()]=[];
+ data.tasks[today()].push({id:Date.now(),title,done:false});
+ $('taskInput').value='';save();render();
+}
+function renderTasks(){
+ let tasks=data.tasks[today()]||[];
+ $('taskList').innerHTML=tasks.length?tasks.map(t=>`
+ <div class="item row ${t.done?'done':''}">
+ <label><input type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${t.id})"><span>${escapeHTML(t.title)}</span></label>
+ <button class="danger" onclick="deleteTask(${t.id})">삭제</button>
+ </div>`).join(''):'할 일이 없어.';
+}
+function toggleTask(id){
+ let t=(data.tasks[today()]||[]).find(x=>x.id===id);
+ if(t)t.done=!t.done;
+ save();render();
+}
+function deleteTask(id){
+ data.tasks[today()]=(data.tasks[today()]||[]).filter(t=>t.id!==id);
+ save();render();
+}
+function renderStats(){
+ let dates=Array.from({length:7},(_,i)=>{
+  let d=new Date();d.setDate(d.getDate()-(6-i));
+  return d.toLocaleDateString('sv-SE');
+ });
+ let vals=dates.map(d=>dayTotal(d));
+ let max=Math.max(...vals,1);
+ $('weekChart').innerHTML=vals.map(v=>`<div style="height:${Math.max(3,v/max*90)}px" title="${fmt(v)}"></div>`).join('');
+ $('weekLabels').innerHTML=dates.map(d=>`<span>${Number(d.slice(8))}일</span>`).join('');
+ $('weekTotal').textContent=(vals.reduce((a,b)=>a+b,0)/3600).toFixed(1)+'시간';
+ $('todayTotal').textContent=minutes(dayTotal())+'분';
+ let all={};
+ Object.values(data.records).forEach(r=>Object.entries(r).forEach(([s,v])=>all[s]=(all[s]||0)+v));
+ $('allStats').innerHTML=Object.entries(all).map(([s,v])=>`<div class="item row"><span>${escapeHTML(s)}</span><b>${fmt(v)}</b></div>`).join('')||'기록이 없어.';
+}
+function renderSettings(){
+ $('goalInput').value=data.goal;
+ $('subjectManage').innerHTML=data.subjects.map(s=>`<div class="item row"><span>${escapeHTML(s)}</span><button class="danger" onclick="removeSubject('${escapeHTML(s)}')">삭제</button></div>`).join('');
+}
+function saveGoal(){
+ let n=Number($('goalInput').value);
+ if(!Number.isFinite(n)||n<1||n>24)return alert('1~24시간 사이로 입력해 줘.');
+ data.goal=n;save();render();
+}
+function addSubject(){
+ let s=$('newSubject').value.trim();
+ if(!s||data.subjects.includes(s))return;
+ data.subjects.push(s);$('newSubject').value='';save();render();
+}
+function removeSubject(s){
+ if(running)return alert('타이머를 종료해 줘.');
+ if(data.subjects.length<=1)return alert('최소 한 과목은 필요해.');
+ if(!confirm(s+' 과목을 목록에서 삭제할까?'))return;
+ data.subjects=data.subjects.filter(x=>x!==s);
+ if(selected===s)selected=data.subjects[0];
+ save();render();
+}
+function clearData(){
+ if(!confirm('공부 기록, 계획, 체크리스트를 모두 삭제할까?'))return;
+ if(running){running=false;clearInterval(tick);elapsed=0;}
+ data.records={};data.plans={};data.tasks={};
+ save();render();
 }
 
-function save() {
-  localStorage.setItem(KEY,JSON.stringify(data));
-}
+// 날짜 변경
+$('planDate').addEventListener('change',renderPlans);
 
-function getDay(date=selectedDate) {
-  data.days[date] ||= {goal:"",plans:[],tasks:[]};
-  return data.days[date];
+// 음악 데이터 저장: IndexedDB
+let db, songs=[],current=-1,repeat=false;
+const audio=$('audio');
+function openDB(){
+ return new Promise((resolve,reject)=>{
+  let req=indexedDB.open('StudyCityMusic',1);
+  req.onupgradeneeded=()=>{
+   let d=req.result;
+   if(!d.objectStoreNames.contains('songs'))d.createObjectStore('songs',{keyPath:'id'});
+  };
+  req.onsuccess=()=>{db=req.result;resolve(db)};
+  req.onerror=()=>reject(req.error);
+ });
 }
-
-function goPage(id) {
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
-  document.querySelector(`[data-page="${id}"]`).classList.add("active");
-  renderAll();
+function getSongs(){
+ return new Promise((resolve,reject)=>{
+  let req=db.transaction('songs','readonly').objectStore('songs').getAll();
+  req.onsuccess=()=>resolve(req.result);
+  req.onerror=()=>reject(req.error);
+ });
 }
-
-document.querySelectorAll("nav button").forEach(btn=>{
-  btn.addEventListener("click",()=>goPage(btn.dataset.page));
+function putSong(song){
+ return new Promise((resolve,reject)=>{
+  let tx=db.transaction('songs','readwrite');
+  tx.objectStore('songs').put(song);
+  tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
+ });
+}
+function removeSong(id){
+ return new Promise((resolve,reject)=>{
+  let tx=db.transaction('songs','readwrite');
+  tx.objectStore('songs').delete(id);
+  tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);
+ });
+}
+async function loadMusic(){
+ try{
+  await openDB();
+  songs=await getSongs();
+  renderSongs();
+ }catch(e){console.error(e);$('songList').textContent='음악 저장소를 열지 못했어.';}
+}
+$('musicFiles').addEventListener('change',async e=>{
+ let files=Array.from(e.target.files||[]);
+ for(let file of files){
+  if(!file.type.startsWith('audio/'))continue;
+  await putSong({id:Date.now()+Math.random(),name:file.name,blob:file});
+ }
+ songs=await getSongs();renderSongs();
+ e.target.value='';
+});
+function renderSongs(){
+ $('songCount').textContent=songs.length+'곡';
+ $('songList').innerHTML=songs.length?songs.map((s,i)=>`
+ <div class="songrow">
+  <span>🎵</span>
+  <span class="songname">${escapeHTML(s.name)}</span>
+  <button onclick="playSong(${i})">재생</button>
+  <button onclick="deleteSong(${i})">삭제</button>
+ </div>`).join(''):'아직 추가한 음악이 없어.';
+}
+let musicURL=null;
+function playSong(i){
+ if(i<0||i>=songs.length)return;
+ current=i;
+ if(musicURL)URL.revokeObjectURL(musicURL);
+ musicURL=URL.createObjectURL(songs[i].blob);
+ audio.src=musicURL;
+ audio.play().then(()=>{
+  $('musicPlay').textContent='Ⅱ';
+ }).catch(()=>alert('재생할 수 없는 파일이야.'));
+ $('songTitle').textContent=songs[i].name;
+}
+function toggleMusic(){
+ if(current===-1){
+  if(songs.length)playSong(0);
+  else alert('먼저 음악 파일을 추가해 줘.');
+ }else if(audio.paused){
+  audio.play().then(()=>$('musicPlay').textContent='Ⅱ');
+ }else{
+  audio.pause();$('musicPlay').textContent='▶';
+ }
+}
+function nextSong(){
+ if(!songs.length)return;
+ playSong((current+1)%songs.length);
+}
+function prevSong(){
+ if(!songs.length)return;
+ if(audio.currentTime>3){audio.currentTime=0;return;}
+ playSong((current-1+songs.length)%songs.length);
+}
+function toggleRepeat(){
+ repeat=!repeat;
+ audio.loop=repeat;
+ $('repeatBtn').style.background=repeat?'#ffffff55':'#ffffff22';
+}
+async function deleteSong(i){
+ if(!confirm('이 음악을 삭제할까?'))return;
+ if(i===current){
+  audio.pause();audio.src='';
+  if(musicURL)URL.revokeObjectURL(musicURL);
+  musicURL=null;current=-1;
+  $('songTitle').textContent='음악을 선택해 줘';
+  $('musicPlay').textContent='▶';
+ }
+ await removeSong(songs[i].id);
+ songs=await getSongs();renderSongs();
+}
+audio.addEventListener('ended',()=>{
+ if(!repeat)nextSong();
+});
+audio.addEventListener('timeupdate',()=>{
+ if(!audio.duration)return;
+ $('seek').value=audio.currentTime/audio.duration*100;
+ $('songTime').textContent=
+ `${fmt(audio.currentTime).slice(3)} / ${fmt(audio.duration).slice(3)}`;
+});
+$('seek').addEventListener('input',e=>{
+ if(audio.duration)audio.currentTime=Number(e.target.value)/100*audio.duration;
+});
+audio.addEventListener('pause',()=>{
+ $('musicPlay').textContent='▶';
+});
+audio.addEventListener('play',()=>{
+ $('musicPlay').textContent='Ⅱ';
 });
 
-document.getElementById("datePicker").value=selectedDate;
-document.getElementById("datePicker").addEventListener("change",e=>{
-  selectedDate=e.target.value;
-  if(!selectedDate)return;
-  renderAll();
-});
-
-document.getElementById("goal").addEventListener("input",e=>{
-  getDay().goal=e.target.value;
-  save();
-});
-
-function addPlan() {
-  const input=document.getElementById("planInput");
-  const value=input.value.trim();
-  if(!value)return;
-  getDay().plans.push({text:value,done:false});
-  input.value="";
-  save();renderAll();
-}
-
-function deletePlan(i) {
-  getDay().plans.splice(i,1);
-  save();renderAll();
-}
-
-function addTask() {
-  const input=document.getElementById("taskInput");
-  const value=input.value.trim();
-  if(!value)return;
-  getDay().tasks.push({text:value,done:false});
-  input.value="";
-  save();renderAll();
-}
-
-function toggleTask(i) {
-  const tasks=getDay().tasks;
-  tasks[i].done=!tasks[i].done;
-  save();renderAll();
-}
-
-function deleteTask(i) {
-  getDay().tasks.splice(i,1);
-  save();renderAll();
-}
-
-function renderAll() {
-  const day=getDay();
-  document.getElementById("goal").value=day.goal;
-  renderPlans();
-  renderTasks();
-  renderProgress();
-  renderSuccess();
-  renderStats();
-  renderCalendar();
-}
-
-function renderPlans() {
-  const list=document.getElementById("planList");
-  const plans=getDay().plans;
-  list.innerHTML="";
-  plans.forEach((p,i)=>{
-    const div=document.createElement("div");
-    div.className="task"+(p.done?" done":"");
-    div.innerHTML=`
-      <input type="checkbox" ${p.done?"checked":""}>
-      <span class="task-name"></span>
-      <button class="delete">×</button>`;
-    div.querySelector(".task-name").textContent=p.text;
-    div.querySelector("input").onchange=()=>{
-      p.done=!p.done;save();renderAll();
-    };
-    div.querySelector("button").onclick=()=>deletePlan(i);
-    list.appendChild(div);
-  });
-  if(!plans.length)list.innerHTML='<p class="muted">아직 계획이 없어. 공부할 내용을 추가해 봐!</p>';
-}
-
-function renderTasks() {
-  const list=document.getElementById("taskList");
-  list.innerHTML="";
-  const tasks=getDay().tasks;
-  tasks.forEach((t,i)=>{
-    const div=document.createElement("div");
-    div.className="task"+(t.done?" done":"");
-    div.innerHTML=`
-      <input type="checkbox" ${t.done?"checked":""}>
-      <span class="task-name"></span>
-      <button class="delete">×</button>`;
-    div.querySelector(".task-name").textContent=t.text;
-    div.querySelector("input").onchange=()=>toggleTask(i);
-    div.querySelector("button").onclick=()=>deleteTask(i);
-    list.appendChild(div);
-  });
-  if(!tasks.length)list.innerHTML='<p class="muted">체크리스트를 추가해 봐!</p>';
-}
-
-function renderProgress() {
-  const tasks=getDay().tasks;
-  const done=tasks.filter(t=>t.done).length;
-  const percent=tasks.length?Math.round(done/tasks.length*100):0;
-  document.getElementById("progressText").textContent=percent+"%";
-  document.getElementById("progressBar").style.width=percent+"%";
-  document.getElementById("progressDetail").textContent=`${done} / ${tasks.length} 완료`;
-  document.getElementById("checkProgress").style.width=percent+"%";
-  document.getElementById("checkCount").textContent=`${done}개 완료 / 전체 ${tasks.length}개`;
-}
-
-function markSuccess() {
-  const tasks=getDay().tasks;
-  if(data.success[selectedDate]) {
-    alert("이미 성공 기록이 있어!");
-    return;
-  }
-  if(tasks.length===0 || !tasks.every(t=>t.done)) {
-    alert("체크리스트를 하나 이상 만들고 모든 항목을 완료해야 성공할 수 있어!");
-    return;
-  }
-  data.success[selectedDate]=true;
-  save();renderAll();
-  alert("🎉 축하해! 오늘 하루 성공했어!\n달력에 성공 스탬프가 추가됐어.");
-}
-
-function adminSuccess() {
-  const code=prompt("관리자 코드를 입력해 주세요.");
-  if(code===null)return;
-  if(code!=="1111") {
-    alert("관리자 코드가 올바르지 않아.");
-    return;
-  }
-  data.success[selectedDate]=true;
-  save();renderAll();
-  alert("🏆 관리자 권한으로 성공 처리했어!");
-}
-
-function renderSuccess() {
-  const success=!!data.success[selectedDate];
-  const status=document.getElementById("successStatus");
-  const btn=document.getElementById("successBtn");
-  if(success) {
-    status.style.background="#effaf3";
-    status.innerHTML='<div class="emoji">🏅</div><h3 style="color:#188653">오늘 하루 성공!</h3><p>정말 잘했어! 오늘의 기록이 저장됐어.</p>';
-    btn.textContent="✓ 성공 기록 완료";
-    btn.disabled=true;
-    btn.style.opacity=".6";
-  } else {
-    status.style.background="#f5f7fb";
-    status.innerHTML='<div class="emoji">📖</div><h3>아직 성공하지 않았어!</h3><p class="muted">오늘의 공부를 완료해 보자.</p>';
-    btn.textContent="🏆 오늘 하루 성공하기";
-    btn.disabled=false;
-    btn.style.opacity="1";
-  }
-  const count=Object.values(data.success).filter(Boolean).length;
-  document.getElementById("successCount").textContent=count+"일 성공";
-  document.getElementById("successHistory").innerHTML=
-    count?Object.keys(data.success).filter(k=>data.success[k]).sort().reverse()
-      .map(k=>`<div style="padding:10px 0;border-bottom:1px solid #eee">🏅 ${k} 성공</div>`).join("")
-      :"아직 성공 기록이 없어.";
-}
-
-function changeMonth(n) {
-  calendarDate.setMonth(calendarDate.getMonth()+n);
-  renderCalendar();
-}
-
-function renderCalendar() {
-  const y=calendarDate.getFullYear();
-  const m=calendarDate.getMonth();
-  document.getElementById("calendarTitle").textContent=`${y}년 ${m+1}월`;
-  const el=document.getElementById("calendar");
-  el.innerHTML="";
-  ["일","월","화","수","목","금","토"].forEach(d=>{
-    const e=document.createElement("div");
-    e.className="weekday";e.textContent=d;el.appendChild(e);
-  });
-  const first=new Date(y,m,1).getDay();
-  const last=new Date(y,m+1,0).getDate();
-  for(let i=0;i<first;i++) {
-    const e=document.createElement("div");e.className="day empty";el.appendChild(e);
-  }
-  for(let d=1;d<=last;d++) {
-    const date=`${y}-${String(m+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-    const success=!!data.success[date];
-    const e=document.createElement("div");
-    e.className="day"+(success?" success":"")+(date===selectedDate?" selected":"");
-    e.innerHTML=`<span>${d}</span>${success?'<span class="stamp">🏅</span>':""}`;
-    e.onclick=()=>{
-      selectedDate=date;
-      document.getElementById("datePicker").value=date;
-      renderAll();
-    };
-    el.appendChild(e);
-  }
-}
-
-function formatTime(s) {
-  const h=Math.floor(s/3600);
-  const m=Math.floor(s%3600/60);
-  const sec=s%60;
-  return [h,m,sec].map(n=>String(n).padStart(2,"0")).join(":");
-}
-
-function startTimer() {
-  if(timerRunning)return;
-  timerSubject=document.getElementById("subject").value;
-  timerRunning=true;
-  document.getElementById("subject").disabled=true;
-  document.getElementById("startBtn").textContent="▶ 실행 중";
-  timerInterval=setInterval(()=>{
-    timerSeconds++;
-    document.getElementById("timerDisplay").textContent=formatTime(timerSeconds);
-  },1000);
-}
-
-function pauseTimer() {
-  if(!timerRunning)return;
-  clearInterval(timerInterval);
-  timerRunning=false;
-  document.getElementById("subject").disabled=false;
-  document.getElementById("startBtn").textContent="▶ 계속";
-  if(timerSeconds>0) {
-    data.study[selectedDate] ||= {};
-    data.study[selectedDate][timerSubject] ||= 0;
-    data.study[selectedDate][timerSubject]+=timerSeconds;
-    save();
-    timerSeconds=0;
-    document.getElementById("timerDisplay").textContent="00:00:00";
-    renderAll();
-  }
-}
-
-function resetTimer() {
-  clearInterval(timerInterval);
-  timerRunning=false;
-  timerSeconds=0;
-  document.getElementById("timerDisplay").textContent="00:00:00";
-  document.getElementById("subject").disabled=false;
-  document.getElementById("startBtn").textContent="▶ 시작";
-}
-
-function getSubjectTotals() {
-  const totals={};
-  Object.values(data.study).forEach(day=>{
-    Object.entries(day).forEach(([subject,seconds])=>{
-      totals[subject]=(totals[subject]||0)+seconds;
-    });
-  });
-  return totals;
-}
-
-function renderSubjectList(target,totals) {
-  const el=document.getElementById(target);
-  el.innerHTML="";
-  const entries=Object.entries(totals);
-  if(!entries.length) {
-    el.innerHTML='<p class="muted">아직 공부 기록이 없어.</p>';return;
-  }
-  entries.sort((a,b)=>b[1]-a[1]);
-  entries.forEach(([subject,seconds])=>{
-    const div=document.createElement("div");
-    div.style.cssText="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #eee";
-    const mins=Math.floor(seconds/60);
-    div.innerHTML=`<strong></strong><span class="muted"></span>`;
-    div.children[0].textContent=subject;
-    div.children[1].textContent=mins+"분";
-    el.appendChild(div);
-  });
-}
-
-function renderStats() {
-  const totals=getSubjectTotals();
-  const total=Object.values(totals).reduce((a,b)=>a+b,0);
-  const todayTotal=Object.values(data.study[selectedDate]||{}).reduce((a,b)=>a+b,0);
-  const completed=Object.values(data.days).reduce((sum,d)=>sum+(d.tasks||[]).filter(t=>t.done).length,0);
-  document.getElementById("totalTime").textContent=Math.floor(total/60)+"분";
-  document.getElementById("todayTime").textContent=Math.floor(todayTotal/60)+"분";
-  document.getElementById("totalSuccess").textContent=Object.values(data.success).filter(Boolean).length+"일";
-  document.getElementById("totalTasks").textContent=completed+"개";
-  renderSubjectList("subjectStats",totals);
-  renderSubjectList("statsSubjects",totals);
-}
-
-document.getElementById("subject").addEventListener("change",e=>{
-  timerSubject=e.target.value;
-});
-
-document.getElementById("todayText").textContent=
-  new Date().toLocaleDateString("ko-KR",{year:"numeric",month:"long",day:"numeric",weekday:"long"});
-
-renderAll();
+// 초기 실행
+$('planDate').value=today();
+render();
+loadMusic();
+setInterval(()=>{
+ $('today').textContent=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+},60000);
 </script>
 </body>
 </html>
